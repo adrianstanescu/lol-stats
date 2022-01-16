@@ -25,8 +25,15 @@ export interface MatchReport {
     };
 }
 
+export enum MatchUserType {
+    Ally = 'Ally',
+    Enemy = 'Enemy',
+}
+
 export interface MatchUser {
+    Type: MatchUserType;
     Stats: MatchStats;
+    Items: number[];
     Champion: string;
     Awards: Partial<Record<AwardType, number>>;
 }
@@ -155,14 +162,25 @@ export interface MatchStats {
 export enum AwardType {
     Kenny = 'Kenny',
     Buddhist = 'Buddhist',
-    // from hots
+    TreeHugger = 'TreeHugger',
+    ThriftShopper = 'ThriftShopper',
+    UnderpantsGnome = 'UnderpantsGnome',
+    BavarianGod = 'BavarianGod',
+    ScaredyPants = 'ScaredyPants',
     Bulwark = 'Bulwark',
-    MainHealer = 'MainHealer',
+    Thicc = 'Thicc',
+    CombatMedic = 'CombatMedic',
+    Dominator = 'Dominator',
+    Protector = 'Protector',
     Finisher = 'Finisher',
-    Painbringer = 'Painbringer',
+    PainBringer = 'PainBringer',
     SiegeMaster = 'SiegeMaster',
-    SoleSurvivor = 'SoleSurvivor',
+    CreepLover = 'CreepLover',
     CrowdController = 'CrowdController',
+    SoleSurvivor = 'SoleSurvivor',
+    RichBitch = 'RichBitch',
+    AlQaeda = 'AlQaeda',
+    PressingIntensifies = 'PressingIntensifies',
 }
 
 export enum AwardSentiment {

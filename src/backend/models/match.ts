@@ -1,5 +1,12 @@
 import { MatchInfo, MatchMetadata, MatchParticipant, MatchTeam } from '../../types/riot';
-import { AwardType, MatchReport, MatchResult, MatchStats, MatchUser } from '../../types/common';
+import {
+    AwardType,
+    MatchReport,
+    MatchResult,
+    MatchStats,
+    MatchUser,
+    MatchUserType,
+} from '../../types/common';
 import { aggregateStats } from '../utils';
 import { configUsers } from '../config';
 import { getMatchAwards } from '../awards';
@@ -11,16 +18,31 @@ export class Match {
         message: string;
         status_code: number;
     };
+    alliedTeamID: number = 0;
     stats: { [puuid: string]: MatchStats } = {};
+    users: { [puuid: string]: MatchUser } = {};
     awards: { [puuid: string]: Partial<Record<AwardType, number>> } = {};
 
     constructor(data: Partial<Match>) {
         Object.assign(this, data);
         if (this.isValid()) {
+            const userPUUIDS = Object.values(this.getUsersPUUID());
+            for (const participant of this.info.participants ?? []) {
+                if (userPUUIDS.includes(participant.puuid)) {
+                    this.alliedTeamID = participant.teamId;
+                }
+            }
+
             this.stats = Object.fromEntries(
-                this.info.participants.map((p) => [p.puuid, this.getParticipantStats(p.puuid)])
+                this.info.participants.map((p) => [p.puuid, this.getParticipantStats(p)])
             );
-            this.awards = getMatchAwards(this.stats);
+            this.users = Object.fromEntries(
+                this.info.participants.map((p) => [p.puuid, this.getParticipantMatch(p)])
+            );
+            this.awards = getMatchAwards(this.users);
+            for (const puuid of Object.keys(this.users)) {
+                this.users[puuid].Awards = this.awards[puuid] ?? {};
+            }
         }
     }
 
@@ -44,20 +66,11 @@ export class Match {
     }
 
     getAlliedTeam(): [MatchTeam, MatchParticipant[]] {
-        const userPUUIDS = Object.values(this.getUsersPUUID());
-        for (const participant of this.info.participants ?? []) {
-            if (userPUUIDS.includes(participant.puuid)) {
-                const team = this.info.teams.find((t) => t.teamId === participant.teamId);
-                if (!team) {
-                    throw new Error('Team not found');
-                }
-                return [
-                    team,
-                    this.info.participants.filter((p) => p.teamId === participant.teamId),
-                ];
-            }
+        const team = this.info.teams.find((t) => t.teamId === this.alliedTeamID);
+        if (!team) {
+            throw new Error('Team not found');
         }
-        throw new Error('Allied team not found');
+        return [team, this.info.participants.filter((p) => p.teamId === this.alliedTeamID)];
     }
     getEnemyTeam(): [MatchTeam, MatchParticipant[]] {
         const [alliedTeam] = this.getAlliedTeam();
@@ -68,23 +81,20 @@ export class Match {
         return [team, this.info.participants.filter((p) => p.teamId === team.teamId)];
     }
 
-    getParticipantMatch(puuid: string): MatchUser {
-        const p = this.info.participants.find((p) => p.puuid === puuid);
-        if (!p || !this.stats[puuid]) {
+    getParticipantMatch(p: MatchParticipant): MatchUser {
+        if (!this.stats[p.puuid]) {
             throw new Error('Participant not found');
         }
         return {
+            Type: p.teamId === this.alliedTeamID ? MatchUserType.Ally : MatchUserType.Enemy,
             Champion: p.championName,
-            Stats: this.stats[puuid],
-            Awards: this.awards[puuid] ?? {},
+            Items: [p.item0, p.item1, p.item2, p.item3, p.item4, p.item5, p.item6],
+            Stats: this.stats[p.puuid],
+            Awards: {},
         };
     }
 
-    getParticipantStats(puuid: string): MatchStats {
-        const p = this.info.participants.find((p) => p.puuid === puuid);
-        if (!p) {
-            throw new Error('Participant not found');
-        }
+    getParticipantStats(p: MatchParticipant): MatchStats {
         return {
             AwardCount: 0,
             CS: p.totalMinionsKilled,
@@ -180,9 +190,6 @@ export class Match {
     }
 
     getReport(): MatchReport {
-        // const participantStats = this.info.participants.map((p) =>
-        //     this.getParticipantStats(p.puuid)
-        // );
         const [alliedTeam, allies] = this.getAlliedTeam();
         const [, enemies] = this.getEnemyTeam();
 
@@ -195,10 +202,7 @@ export class Match {
             Enemies: aggregateStats(...enemies.map((p) => this.stats[p.puuid])),
             Surrendered: false, // TODO!
             Users: Object.fromEntries(
-                Object.entries(this.getUsersPUUID()).map(([id, puuid]) => [
-                    id,
-                    this.getParticipantMatch(puuid),
-                ])
+                Object.entries(this.getUsersPUUID()).map(([id, puuid]) => [id, this.users[puuid]])
             ),
         };
     }

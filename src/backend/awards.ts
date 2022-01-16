@@ -1,25 +1,38 @@
-import { AwardType, MatchStats } from '../types/common';
-import { totalDamage } from './utils';
+import { AwardType, MatchUser, MatchUserType } from '../types/common';
+import { ItemSet } from './models/itemSet';
+import { isDefined, totalDamage } from './utils';
 
-type GetWinner = (participants: { [puuid: string]: MatchStats }) => string | null;
+type GetWinner = (participants: { [puuid: string]: MatchUser }) => string | null;
 
 function simplePickWinner(
     select: 'first' | 'last',
-    getAmountFn: (stats: MatchStats) => number,
-    fallbackAmountFn?: (stats: MatchStats) => number
+    getAmountFn: (stats: MatchUser) => number | undefined,
+    getFallbackAmountFn?: (stats: MatchUser) => number,
+    hasWinnerFn?: (participants: { [puuid: string]: MatchUser }) => boolean
 ) {
-    return (participants: { [puuid: string]: MatchStats }) => {
-        const ps = Object.entries(participants);
-        ps.sort(([_a, aStats], [_b, bStats]) => {
-            const diff = getAmountFn(bStats) - getAmountFn(aStats);
+    return (participants: { [puuid: string]: MatchUser }) => {
+        if (hasWinnerFn !== undefined && !hasWinnerFn(participants)) {
+            return null;
+        }
+        const values = Object.entries(participants)
+            .map(([puuid, participant]) => {
+                const amount = getAmountFn(participant);
+                if (amount === undefined) {
+                    return undefined;
+                }
+                return [puuid, amount, participant] as const;
+            })
+            .filter(isDefined);
+        values.sort(([_a, a, aUser], [_b, b, bUser]) => {
+            const diff = b - a;
             if (diff === 0) {
-                if (fallbackAmountFn) {
-                    return fallbackAmountFn(bStats) - fallbackAmountFn(aStats);
+                if (getFallbackAmountFn) {
+                    return getFallbackAmountFn(bUser) - getFallbackAmountFn(aUser);
                 }
             }
             return diff;
         });
-        const [puuid] = select === 'first' ? ps[0] : ps[ps.length - 1];
+        const [puuid] = select === 'first' ? values[0] : values[values.length - 1];
         return puuid;
     };
 }
@@ -27,16 +40,49 @@ function simplePickWinner(
 const AWARDS: Partial<Record<AwardType, GetWinner>> = {
     [AwardType.Kenny]: simplePickWinner(
         'first',
-        (stats) => stats.Champions.Deaths,
-        (stats) => stats.Misc.TotalTimeSpentDead
+        ({ Stats }) => Stats.Champions.Deaths,
+        ({ Stats }) => Stats.Misc.TotalTimeSpentDead
     ),
-    [AwardType.Buddhist]: simplePickWinner('last', (stats) => totalDamage(stats.Damage.Champions)),
-    [AwardType.Bulwark]: simplePickWinner('first', (stats) =>
-        totalDamage(stats.Defense.DamageTaken)
+    [AwardType.Buddhist]: simplePickWinner('last', ({ Stats }) =>
+        totalDamage(Stats.Damage.Champions)
+    ),
+    [AwardType.TreeHugger]: simplePickWinner('last', ({ Stats }) => Stats.Damage.Siege),
+    [AwardType.ThriftShopper]: simplePickWinner(
+        'last',
+        ({ Items }) => {
+            const itemSet = new ItemSet(Items);
+            return itemSet.isFullBuild() ? itemSet.getFullBuildValue() : Infinity;
+        },
+        undefined,
+        (participants) => {
+            // at least 2 teammates must have a full build
+            const allyFullBuilds = Object.values(participants)
+                .filter((participant) => participant.Type === MatchUserType.Ally)
+                .map((participant) => new ItemSet(participant.Items))
+                .filter((itemSet) => itemSet.isFullBuild());
+            return allyFullBuilds.length >= 2;
+        }
+    ),
+    [AwardType.UnderpantsGnome]: simplePickWinner(
+        'first',
+        ({ Stats }) => Stats.Champions.Kills + Stats.Champions.Assists
+    ),
+    [AwardType.BavarianGod]: simplePickWinner(
+        'first',
+        ({ Stats }) =>
+            (totalDamage(Stats.Damage.Champions) + Stats.Damage.Siege) / Stats.Misc.GoldSpent
+    ),
+    [AwardType.ScaredyPants]: simplePickWinner('last', ({ Stats }) => Stats.Champions.Deaths),
+    [AwardType.Thicc]: simplePickWinner(
+        'first',
+        ({ Stats }) => totalDamage(Stats.Defense.DamageTaken) / Stats.Champions.Deaths
+    ),
+    [AwardType.Bulwark]: simplePickWinner('first', ({ Stats }) =>
+        totalDamage(Stats.Defense.DamageTaken)
     ),
 };
 
-export function getMatchAwards(participants: { [puuid: string]: MatchStats }): {
+export function getMatchAwards(participants: { [puuid: string]: MatchUser }): {
     [puuid: string]: Partial<Record<AwardType, number>>;
 } {
     let matchAwards: { [puuid: string]: Partial<Record<AwardType, number>> } = {};
@@ -48,7 +94,7 @@ export function getMatchAwards(participants: { [puuid: string]: MatchStats }): {
         }
 
         // TODO: mutating arguments is not cool :(
-        participants[winner].AwardCount += 1;
+        participants[winner].Stats.AwardCount += 1;
 
         if (!matchAwards[winner]) {
             matchAwards[winner] = {};

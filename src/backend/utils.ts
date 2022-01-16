@@ -145,3 +145,7 @@ export async function download(
         res.body.pipe(fh);
     });
 }
+
+export function isDefined<T>(value: T | undefined): value is T {
+    return typeof value !== 'undefined';
+}
