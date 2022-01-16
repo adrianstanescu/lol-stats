@@ -11,11 +11,11 @@ interface Props {
 
 export default function Score({ user }: Props) {
     const kda =
-        (user.Stats.Champions.Kills + user.Stats.Champions.Assists) / user.Stats.Champions.Deaths;
+        (user.Stats.Score.Champion.Kills + user.Stats.Score.Champion.Assists) / user.Stats.Score.Champion.Deaths;
     const cs = useAggregate(user.Stats.CS, user);
-    const kills = useAggregate(user.Stats.Champions.Kills, user);
-    const deaths = useAggregate(user.Stats.Champions.Deaths, user);
-    const assists = useAggregate(user.Stats.Champions.Assists, user);
+    const kills = useAggregate(user.Stats.Score.Champion.Kills, user);
+    const deaths = useAggregate(user.Stats.Score.Champion.Deaths, user);
+    const assists = useAggregate(user.Stats.Score.Champion.Assists, user);
     return (
         <Stat
             primary={

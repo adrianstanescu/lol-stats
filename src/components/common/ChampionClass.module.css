@@ -1,0 +1,7 @@
+.icon {
+    width: 0.85em;
+    height: 0.85em;
+    filter: grayscale(1) brightness(2);
+    margin-right: 0.15em;
+    margin-left: 0.15em;
+}

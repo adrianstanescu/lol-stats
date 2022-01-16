@@ -64,9 +64,14 @@ export const EMPTY_DAMAGE: Damage = {
 };
 
 export const EMPTY_MATCH_STATS: MatchStats = {
-    AwardCount: 0,
-    Champions: EMPTY_KDA,
-    Structures: {
+    Roles: {},
+    Lanes: {},
+    Positions: {},
+    Champions: {},
+    Classes: {},
+    Awards: 0,
+    Score: {
+        Champion: EMPTY_KDA,
         Inhibitor: EMPTY_KDA,
         Nexus: EMPTY_KDA,
         Turret: EMPTY_KDA,

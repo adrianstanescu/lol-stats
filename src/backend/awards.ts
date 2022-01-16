@@ -40,7 +40,7 @@ function simplePickWinner(
 const AWARDS: Partial<Record<AwardType, GetWinner>> = {
     [AwardType.Kenny]: simplePickWinner(
         'first',
-        ({ Stats }) => Stats.Champions.Deaths,
+        ({ Stats }) => Stats.Score.Champion.Deaths,
         ({ Stats }) => Stats.Misc.TotalTimeSpentDead
     ),
     [AwardType.Buddhist]: simplePickWinner('last', ({ Stats }) =>
@@ -65,17 +65,17 @@ const AWARDS: Partial<Record<AwardType, GetWinner>> = {
     ),
     [AwardType.UnderpantsGnome]: simplePickWinner(
         'first',
-        ({ Stats }) => Stats.Champions.Kills + Stats.Champions.Assists
+        ({ Stats }) => Stats.Score.Champion.Kills + Stats.Score.Champion.Assists
     ),
     [AwardType.BavarianGod]: simplePickWinner(
         'first',
         ({ Stats }) =>
             (totalDamage(Stats.Damage.Champions) + Stats.Damage.Siege) / Stats.Misc.GoldSpent
     ),
-    [AwardType.ScaredyPants]: simplePickWinner('last', ({ Stats }) => Stats.Champions.Deaths),
+    [AwardType.ScaredyPants]: simplePickWinner('last', ({ Stats }) => Stats.Score.Champion.Deaths),
     [AwardType.Thicc]: simplePickWinner(
         'first',
-        ({ Stats }) => totalDamage(Stats.Defense.DamageTaken) / Stats.Champions.Deaths
+        ({ Stats }) => totalDamage(Stats.Defense.DamageTaken) / Stats.Score.Champion.Deaths
     ),
     [AwardType.Bulwark]: simplePickWinner('first', ({ Stats }) =>
         totalDamage(Stats.Defense.DamageTaken)
@@ -94,7 +94,7 @@ export function getMatchAwards(participants: { [puuid: string]: MatchUser }): {
         }
 
         // TODO: mutating arguments is not cool :(
-        participants[winner].Stats.AwardCount += 1;
+        participants[winner].Stats.Awards += 1;
 
         if (!matchAwards[winner]) {
             matchAwards[winner] = {};

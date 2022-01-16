@@ -11,12 +11,18 @@ import Spells from './Spells';
 import Time from './Time';
 import Gold from './Gold';
 import Structures from './Structures';
+import Champions from './Champions';
 
 interface Props {
     users: { [id: string]: UserReport };
 }
 
 const SECTIONS = [
+    {
+        key: 'champions',
+        label: 'Champions',
+        Component: Champions,
+    },
     {
         key: 'awards',
         label: 'Awards',

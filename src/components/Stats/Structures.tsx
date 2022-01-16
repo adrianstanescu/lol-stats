@@ -14,12 +14,12 @@ export default function Structures({ user }: Props) {
     const [aggregateType] = useAggregateType();
     const [iK, tK, nK, iA, tA, nA] = useAggregate(
         [
-            user.Stats.Structures.Inhibitor.Kills,
-            user.Stats.Structures.Turret.Kills,
-            user.Stats.Structures.Nexus.Kills,
-            user.Stats.Structures.Inhibitor.Assists,
-            user.Stats.Structures.Turret.Assists,
-            user.Stats.Structures.Nexus.Assists,
+            user.Stats.Score.Inhibitor.Kills,
+            user.Stats.Score.Turret.Kills,
+            user.Stats.Score.Nexus.Kills,
+            user.Stats.Score.Inhibitor.Assists,
+            user.Stats.Score.Turret.Assists,
+            user.Stats.Score.Nexus.Assists,
         ],
         user
     );

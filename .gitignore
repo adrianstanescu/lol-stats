@@ -28,3 +28,4 @@ yarn-error.log*
 /src/backend/assets/dragontail
 /.cache
 /public/mainReport.json
+/deploy.sh

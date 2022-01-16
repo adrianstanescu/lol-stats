@@ -38,7 +38,7 @@ function loadItems() {
     if (itemsLoaded) {
         return;
     }
-    const data = JSON.parse(readFileSync(join(__dirname, '..', 'assets', 'item.json')).toString());
+    const data = JSON.parse(readFileSync(join(__dirname, '..', '..', 'assets', 'item.json')).toString());
     items = data.data;
     itemsLoaded = true;
 }

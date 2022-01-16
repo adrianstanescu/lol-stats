@@ -30,7 +30,6 @@ export default function Awards({ user }: Props) {
     awards.sort(([_, a], [__, b]) => b - a);
     const [favoriteType, count] = awards[0] ?? [undefined, 0];
     const favoriteCount = useAggregate(count, user);
-    console.log(favoriteType, AWARDS);
     const favoriteAward = AWARDS.find((a) => a.type === favoriteType);
     return (
         <Stat

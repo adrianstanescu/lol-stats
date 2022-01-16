@@ -59,7 +59,7 @@ export class MainReportBuilder implements MainReport {
             summaries[id] = {
                 CS: match.Users[id].Stats.CS,
                 Champion: match.Users[id].Champion,
-                Champions: match.Users[id].Stats.Champions,
+                Champions: match.Users[id].Stats.Score.Champion,
             };
         }
         // const users = Object.fromEntries(Object.entries(match.Users).map([id, stats])

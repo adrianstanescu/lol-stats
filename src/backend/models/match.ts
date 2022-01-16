@@ -1,6 +1,7 @@
 import { MatchInfo, MatchMetadata, MatchParticipant, MatchTeam } from '../../types/riot';
 import {
     AwardType,
+    ChampionClassType,
     MatchReport,
     MatchResult,
     MatchStats,
@@ -10,6 +11,7 @@ import {
 import { aggregateStats } from '../utils';
 import { configUsers } from '../config';
 import { getMatchAwards } from '../awards';
+import { Champion } from './champion';
 
 export class Match {
     metadata!: MatchMetadata;
@@ -87,6 +89,9 @@ export class Match {
         }
         return {
             Type: p.teamId === this.alliedTeamID ? MatchUserType.Ally : MatchUserType.Enemy,
+            Position: p.individualPosition,
+            Lane: p.lane,
+            Role: p.role,
             Champion: p.championName,
             Items: [p.item0, p.item1, p.item2, p.item3, p.item4, p.item5, p.item6],
             Stats: this.stats[p.puuid],
@@ -96,13 +101,25 @@ export class Match {
 
     getParticipantStats(p: MatchParticipant): MatchStats {
         return {
-            AwardCount: 0,
-            CS: p.totalMinionsKilled,
-            Champions: {
-                Kills: p.kills,
-                Deaths: p.deaths,
-                Assists: p.assists,
+            Positions: {
+                [p.individualPosition]: 1,
             },
+            Lanes: {
+                [p.lane]: 1,
+            },
+            Roles: {
+                [p.role]: 1,
+            },
+            Champions: {
+                [p.championName]: 1,
+            },
+            Classes: Object.fromEntries(
+                Champion.get(p.championName)
+                    ?.getClasses()
+                    ?.map((c) => [c, 1]) ?? []
+            ) as Partial<Record<ChampionClassType, number>>,
+            Awards: 0,
+            CS: p.totalMinionsKilled,
             Damage: {
                 Champions: {
                     Magic: p.magicDamageDealtToChampions,
@@ -157,7 +174,12 @@ export class Match {
                 D: p.summoner1Casts,
                 F: p.summoner2Casts,
             },
-            Structures: {
+            Score: {
+                Champion: {
+                    Kills: p.kills,
+                    Deaths: p.deaths,
+                    Assists: p.assists,
+                },
                 Inhibitor: {
                     Kills: p.inhibitorKills,
                     Deaths: p.inhibitorsLost ?? 0,

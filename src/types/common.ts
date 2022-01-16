@@ -1,3 +1,12 @@
+export enum ChampionClassType {
+    Fighter = 'Fighter',
+    Tank = 'Tank',
+    Mage = 'Mage',
+    Assassin = 'Assassin',
+    Marksman = 'Marksman',
+    Support = 'Support',
+}
+
 export interface MainReport {
     Users: {
         [id: string]: UserReport;
@@ -32,6 +41,9 @@ export enum MatchUserType {
 
 export interface MatchUser {
     Type: MatchUserType;
+    Position: string;
+    Role: string;
+    Lane: string;
     Stats: MatchStats;
     Items: number[];
     Champion: string;
@@ -91,10 +103,14 @@ export interface Damage {
 }
 
 export interface MatchStats {
-    // TODO: role, lane, and individualPosition
-    AwardCount: number;
-    Champions: KDA;
-    Structures: {
+    Positions: Record<string, number>;
+    Roles: Record<string, number>;
+    Lanes: Record<string, number>;
+    Awards: number;
+    Champions: Record<string, number>;
+    Classes: Partial<Record<ChampionClassType, number>>;
+    Score: {
+        Champion: KDA;
         Inhibitor: KDA;
         Nexus: KDA;
         Turret: KDA;
