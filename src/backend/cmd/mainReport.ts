@@ -22,7 +22,9 @@ async function generateMainReport() {
             if (!match.isValid()) {
                 continue;
             }
-            mainReport.addMatch(match.getReport());
+            const matchReport = match.getReport();
+            mainReport.addMatch(matchReport);
+
         }
         const summoners = await user.getSummoners();
         // console.log(summoners);
@@ -33,6 +35,13 @@ async function generateMainReport() {
             
             await download(iconSrc, iconDst);
         }
+    }
+
+    const championSprites = Array.from(new Set(Object.values(mainReport.Meta.Champions).map(c => c.Sprite)));
+    for (const sprite of championSprites) {
+        const src = `https://ddragon.leagueoflegends.com/cdn/${datadragonVersion()}/img/sprite/${sprite}`;
+        const dst = join(publicDir, 'assets', 'img', 'sprite', sprite);
+        await download(src, dst);
     }
 
     writeFileSync(join(publicDir, 'mainReport.json'), JSON.stringify(mainReport));

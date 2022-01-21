@@ -1,4 +1,4 @@
-import useFetch from 'use-http';
+import useFetch, { CachePolicies } from 'use-http';
 
 import { MainReport } from '../types/common';
 import RadioButtonGroup from '../components/common/RadioButtonGroup';
@@ -7,11 +7,14 @@ import { AggregateType, useAggregateType } from '../hooks/preferences';
 
 export default function Home() {
     const [aggregateType, setAggregateType] = useAggregateType();
-    const { data } = useFetch<MainReport>('/mainReport.json', {}, []);
+    const { data } = useFetch<MainReport>(
+        '/mainReport.json',
+        { cachePolicy: CachePolicies.CACHE_AND_NETWORK },
+        []
+    );
 
     return (
         <div>
-            <h1>Home</h1>
             <RadioButtonGroup
                 value={aggregateType}
                 onChange={setAggregateType}

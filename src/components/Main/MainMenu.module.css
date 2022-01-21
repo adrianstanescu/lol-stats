@@ -1,0 +1,8 @@
+.link {
+    text-decoration: none;
+    color: var(--text-color-default);
+    padding: 1em;
+}
+.link.active {
+    text-decoration: underline;
+}

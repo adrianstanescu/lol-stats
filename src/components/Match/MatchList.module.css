@@ -1,0 +1,11 @@
+.matchList thead {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-default);
+    box-shadow: 0 1em 2em var(--background-default), 0 0.5em 0.5em var(--background-default);
+}
+.matchList tbody:before {
+    line-height: 1.5em;
+    content: '\200C';
+    display: block;
+}

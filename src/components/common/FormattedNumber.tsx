@@ -9,11 +9,9 @@ const durationFormatter = new DurationUnitFormat(LOCALE, {
     format: '{hour} {minutes} {seconds}',
 });
 
-interface Props {
+export interface FormattedNumberProps {
     value: number;
     variant?: 'duration' | 'percent' | 'frequency' | 'default';
-    prefix?: string;
-    suffix?: string;
     fractionDigits?: number;
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
@@ -22,13 +20,11 @@ interface Props {
 export default function FormattedNumber({
     value,
     variant = 'default',
-    prefix = '',
-    suffix = '',
     fractionDigits = 2,
     minimumFractionDigits,
     maximumFractionDigits,
     aggregateType,
-}: Props) {
+}: FormattedNumberProps) {
     const minFD = aggregateType
         ? FRACTION_DIGITS_BY_AGGREGATE_TYPE[aggregateType]
         : minimumFractionDigits ?? fractionDigits;

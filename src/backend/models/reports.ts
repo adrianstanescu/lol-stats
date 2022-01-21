@@ -4,12 +4,14 @@ import {
     MatchResult,
     MatchSummary,
     MatchUserSummary,
+    MetaChampion,
     UserReport,
 } from '../../types/common';
 import { EMPTY_MATCH_STATS } from '../constants';
 import { User } from './user';
 import { aggregateAwards, aggregateStats, combinations } from '../utils';
 import { configUsers } from '../config';
+import { getMetaChampion } from '../meta';
 
 export class MainReportBuilder implements MainReport {
     public Users: {
@@ -18,6 +20,11 @@ export class MainReportBuilder implements MainReport {
     public Matches: MatchSummary[] = [];
 
     public Venn: { key: string[]; data: number }[] = [];
+    public Meta: {
+        Champions: { [key: string]: MetaChampion };
+    } = {
+        Champions: {},
+    };
 
     async addUser(user: User) {
         const summoners = await user.getSummoners();
@@ -58,15 +65,20 @@ export class MainReportBuilder implements MainReport {
 
             summaries[id] = {
                 CS: match.Users[id].Stats.CS,
+                Gold: match.Users[id].Stats.Misc.GoldEarned,
                 Champion: match.Users[id].Champion,
                 Champions: match.Users[id].Stats.Score.Champion,
             };
+            if (this.Meta.Champions[match.Users[id].Champion] === undefined) {
+                this.Meta.Champions[match.Users[id].Champion] = getMetaChampion(match.Users[id].Champion);
+            }
         }
         // const users = Object.fromEntries(Object.entries(match.Users).map([id, stats])
         this.Matches.push({
             ID: match.ID,
             CreatedAt: match.CreatedAt,
             Duration: match.Duration,
+            Map: match.Map,
             Result: match.Result,
             Users: summaries,
         });

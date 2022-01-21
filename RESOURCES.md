@@ -9,3 +9,9 @@ https://raw.communitydragon.org/pbe/plugins/rcp-fe-lol-static-assets/global/defa
 https://raw.communitydragon.org/pbe/plugins/rcp-fe-lol-static-assets/unknown/b589bcafc183b174.svg
 https://raw.communitydragon.org/pbe/plugins/rcp-fe-lol-champ-select/global/default/images/champion-grid/role-filter-disabled.png
 https://raw.communitydragon.org/pbe/plugins/rcp-fe-lol-champion-details/global/default/role-icon-assassin.png
+
+https://raw.communitydragon.org/pbe/plugins/rcp-fe-lol-champion-details/global/default/personal-best-icon.png
+
+https://raw.communitydragon.org/11.24/plugins/rcp-fe-lol-postgame/global/default/icon-add-friend.png
+
+https://raw.communitydragon.org/11.24/plugins/rcp-fe-lol-postgame/global/default/icon-ha-defeat.png

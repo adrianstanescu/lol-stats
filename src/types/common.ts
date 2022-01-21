@@ -7,6 +7,16 @@ export enum ChampionClassType {
     Support = 'Support',
 }
 
+export interface MetaChampion {
+    Name: string;
+    Title: string;
+    Sprite: string;
+    X: number;
+    Y: number;
+    W: number;
+    H: number;
+}
+
 export interface MainReport {
     Users: {
         [id: string]: UserReport;
@@ -14,6 +24,9 @@ export interface MainReport {
     Matches: MatchSummary[];
 
     Venn: { key: string[]; data: number }[];
+    Meta: {
+        Champions: { [key: string]: MetaChampion };
+    };
 }
 
 export enum MatchResult {
@@ -21,8 +34,14 @@ export enum MatchResult {
     Loss = 'Loss',
 }
 
+export enum MatchMap {
+    SR = 'SR',
+    HA = 'HA',
+}
+
 export interface MatchReport {
     ID: string;
+    Map: MatchMap;
     Result: MatchResult;
     CreatedAt: number;
     Duration: number; // in seconds
@@ -78,10 +97,12 @@ export interface MatchUserSummary {
     Champion: string;
     Champions: KDA;
     CS: number;
+    Gold: number;
 }
 
 export interface MatchSummary {
     ID: string;
+    Map: MatchMap;
     Result: MatchResult;
     CreatedAt: number;
     Duration: number;
