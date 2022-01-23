@@ -44,6 +44,8 @@ async function generateMainReport() {
         await download(src, dst);
     }
 
+    mainReport.sortMatches();
+
     writeFileSync(join(publicDir, 'mainReport.json'), JSON.stringify(mainReport));
 }
 generateMainReport();

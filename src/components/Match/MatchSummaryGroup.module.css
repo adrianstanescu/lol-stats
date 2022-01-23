@@ -1,0 +1,22 @@
+.groupStats {
+    padding: 0.2em 1em;
+}
+.groupStats th {
+    text-align: left;
+    font-size: 0.75em;
+    opacity: 0;
+}
+.groupStats tbody th {
+    text-align: right;
+    padding-right: 0.5em;
+}
+.groupStats:hover th {
+    opacity: 1;
+}
+
+.summaryRow > td {
+    position: sticky;
+    top: 38px;
+    background-color: var(--background-default);
+    box-shadow: 0 0.5em 1em var(--background-default), 0 0.25em 0.25em var(--background-default);
+}

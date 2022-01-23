@@ -1,14 +1,16 @@
 import { MainReport } from '../../types/common';
 import UserAvatar from '../User/UserAvatar';
-import MatchSummary from './MatchSummary';
 import styles from './MatchList.module.css';
 import ClockIcon from '../icons/ClockIcon';
+import { groupMatches } from '../../process/groupMatches';
+import MatchSummaryGroupComponent from './MatchSummaryGroup';
 
 interface Props {
     report: MainReport;
 }
 export default function MatchList({ report }: Props) {
     const userIDs = Object.keys(report.Users);
+    const groups = groupMatches(report).reverse();
     // TODO: add virtualization
     return (
         <table className={styles.matchList}>
@@ -26,13 +28,12 @@ export default function MatchList({ report }: Props) {
                 </tr>
             </thead>
             <tbody>
-                {report.Matches.map((match, i) => (
-                    <MatchSummary
-                        key={match.ID}
-                        match={match}
-                        userIDs={userIDs}
+                {groups.map((group) => (
+                    <MatchSummaryGroupComponent
+                        key={group.Date}
                         report={report}
-                        previousMatch={i > 0 ? report.Matches[i - 1] : undefined}
+                        userIDs={userIDs}
+                        group={group}
                     />
                 ))}
             </tbody>

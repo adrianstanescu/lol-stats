@@ -4,6 +4,8 @@
     --border-default: #333;
     --text-color-default: #eee;
     --text-color-secondary: #aaa;
+    --text-color-positive: #66bb6a;
+    --text-color-negative: #f44336;
 
     --transition-default: all 200ms ease-in;
 }

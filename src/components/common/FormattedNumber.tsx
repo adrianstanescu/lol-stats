@@ -12,6 +12,7 @@ const durationFormatter = new DurationUnitFormat(LOCALE, {
 export interface FormattedNumberProps {
     value: number;
     variant?: 'duration' | 'percent' | 'frequency' | 'default';
+    isDiff?: boolean;
     fractionDigits?: number;
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
@@ -20,6 +21,7 @@ export interface FormattedNumberProps {
 export default function FormattedNumber({
     value,
     variant = 'default',
+    isDiff = false,
     fractionDigits = 2,
     minimumFractionDigits,
     maximumFractionDigits,
@@ -31,6 +33,15 @@ export default function FormattedNumber({
     const maxFD = aggregateType
         ? FRACTION_DIGITS_BY_AGGREGATE_TYPE[aggregateType]
         : maximumFractionDigits ?? fractionDigits;
+
+    let style = { color: 'inherit' };
+    let signDisplay: 'auto' | 'never' | 'always' = 'auto';
+
+    if (isDiff) {
+        style.color = value >= 0 ? 'var(--text-color-positive)' : 'var(--text-color-negative)';
+        signDisplay = 'always';
+    }
+
     if (variant === 'duration') {
         return (
             <span title={`${value} seconds`}>
@@ -47,18 +58,20 @@ export default function FormattedNumber({
         );
     } else if (variant === 'percent') {
         const percentFormatter = new Intl.NumberFormat(LOCALE, {
-            style: 'percent',
+            style: isDiff ? 'decimal' : 'percent',
+            signDisplay,
             minimumFractionDigits: minFD,
             maximumFractionDigits: maxFD,
         });
-        return <code title={(value * 100).toString()}>{percentFormatter.format(value)}</code>;
+        return <code style={style} title={(value * 100).toString()}>{percentFormatter.format(isDiff ? value * 100 : value)}</code>;
     }
     const numberFormatter = new Intl.NumberFormat(LOCALE, {
         notation: 'compact',
+        signDisplay,
         minimumFractionDigits: minFD,
         maximumFractionDigits: maxFD,
     });
-    return <code title={value.toString()}>{numberFormatter.format(value)}</code>;
+    return <code style={style} title={value.toString()}>{numberFormatter.format(value)}</code>;
     // const formatter = new Intl.NumberFormat(undefined, {
     //     notation: 'compact',
     //     compactDisplay: 'short',

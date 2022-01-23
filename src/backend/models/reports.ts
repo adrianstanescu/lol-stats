@@ -96,4 +96,8 @@ export class MainReportBuilder implements MainReport {
             }
         }
     }
+
+    sortMatches() {
+        this.Matches.sort((a, b) => b.CreatedAt - a.CreatedAt);
+    }
 }

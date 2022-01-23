@@ -232,3 +232,21 @@ export interface Award {
     description: string;
     sentiment: AwardSentiment;
 }
+
+export interface MatchSummaryGroup {
+    Date: string;
+    TotalKDA: {
+        [id: string]: number;
+    };
+    KDA: {
+        [id: string]: number;
+    };
+    TotalWinRate: {
+        [id: string]: number;
+    };
+    WinRate: {
+        [id: string]: number;
+    };
+    PreviousGroup?: MatchSummaryGroup;
+    Matches: MatchSummary[];
+}

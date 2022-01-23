@@ -1,11 +1,10 @@
-.matchList thead {
+.matchList > thead {
     position: sticky;
-    top: 0;
+    z-index: 1;
+    /* hide avatar */
+    top: calc(-82px - 0.5rem);
     background-color: var(--background-default);
-    box-shadow: 0 1em 2em var(--background-default), 0 0.5em 0.5em var(--background-default);
 }
-.matchList tbody:before {
-    line-height: 1.5em;
-    content: '\200C';
-    display: block;
+.matchList > thead th {
+    vertical-align: bottom;
 }
