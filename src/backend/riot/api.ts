@@ -40,18 +40,10 @@ export async function getMatchIDs(puuid: string): Promise<string[]> {
     // eslint-disable-next-line no-labels
     paging_loop: {
         while (true) {
-            const key = `${puuid}-${offset}-${offset + PAGE_SIZE}`;
-            let matchIDsPage = cache.get<string[]>(
-                CacheSection.APIMatchIDs,
-                key,
-                10 * 60 * 1000
-            );
-            if (!matchIDsPage) {
-                const response = await riotFetch(APIRequestMethod.MatchIDs, puuid, offset);
-                const data = await response.json();
-                cache.set(CacheSection.APIMatchIDs, key, data);
-                matchIDsPage = data as string[];
-            }
+            const response = await riotFetch(APIRequestMethod.MatchIDs, puuid, offset);
+            const data = await response.json();
+            const matchIDsPage = data as string[];
+            
             for (const matchID of matchIDsPage) {
                 if (lastExistingMatch === matchID) {
                     // eslint-disable-next-line no-labels
