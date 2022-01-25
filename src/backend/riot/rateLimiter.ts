@@ -106,6 +106,7 @@ export class RateLimiter {
     private appLimits!: RateLimit[];
     private methodLimits!: Record<APIRequestMethod, RateLimit[]>;
     private hasInitialLimits: boolean = true;
+    private retryAfter = Promise.resolve();
     constructor(limits?: RateLimitConfig[]) {
         this.setLimits(limits ?? INITIAL_RATE_LIMITS);
     }
@@ -142,11 +143,17 @@ export class RateLimiter {
             }
             limit.refreshCount(info.count);
         }
+        if (headers.has('Retry-After')) {
+            const retryAfterMS = parseInt(headers.get('Retry-After') ?? '5', 10) * 1000;
+            console.info('halting future api calls for', retryAfterMS, 'ms');
+            this.retryAfter = sleep(retryAfterMS);
+        }
     }
     async willRequest(method: APIRequestMethod): Promise<void> {
         await Promise.all([
             ...this.appLimits.map((limit) => limit.willRequest()),
             ...this.methodLimits[method].map((limit) => limit.willRequest()),
         ]);
+        await this.retryAfter;
     }
 }

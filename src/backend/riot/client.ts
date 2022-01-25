@@ -1,4 +1,4 @@
-import fetch, { Headers } from 'node-fetch';
+import fetch, { Headers, Response } from 'node-fetch';
 import { configRegion, riotAPIKey } from '../config';
 import { Server } from '../../types/riot';
 import { RateLimiter } from './rateLimiter';
@@ -21,7 +21,6 @@ const METHODS: Record<APIRequestMethod, (...args: any[]) => string> = {
 };
 
 export class Client {
-    private queue = Promise.resolve<any>(undefined);
     private headers: Headers;
     private rateLimiter: RateLimiter;
 
@@ -32,17 +31,19 @@ export class Client {
         this.rateLimiter = new RateLimiter();
     }
 
-    async fetch(method: APIRequestMethod, ...args: any) {
+    async fetch(method: APIRequestMethod, ...args: any): Promise<Response> {
         const url = METHODS[method](...args);
-        const response = this.queue.then(async () => {
-            await this.rateLimiter.willRequest(method);
-            console.info('fetching', url);
-            const response = await fetch(url, { headers: this.headers });
-            this.rateLimiter.refreshCounts(method, response.headers);
-            // TODO: check errors
-            return response;
-        });
-        this.queue = response.catch(() => {});
+        await this.rateLimiter.willRequest(method);
+        console.info('fetching', url, new Date());
+        const response = await fetch(url, { headers: this.headers });
+        this.rateLimiter.refreshCounts(method, response.headers);
+        if (!response.ok) {
+            if (response.status === 429) {
+                return this.fetch(method, ...args);
+            } else {
+                throw new Error(`${response.status} ${response.statusText} response from Riot API`);
+            }
+        }
         return response;
     }
 }
