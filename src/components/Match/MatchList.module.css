@@ -1,0 +1,10 @@
+.matchList > thead {
+    position: sticky;
+    z-index: 1;
+    /* hide avatar */
+    top: calc(-82px - 0.5rem);
+    background-color: var(--background-default);
+}
+.matchList > thead th {
+    vertical-align: bottom;
+}

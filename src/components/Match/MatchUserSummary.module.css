@@ -1,0 +1,22 @@
+.summary {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: space-between;
+    padding: 0.2em 1em;
+}
+
+.icon {
+    width: 1em;
+    height: 1em;
+}
+.details {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.stats {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}

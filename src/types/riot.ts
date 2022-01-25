@@ -20,8 +20,8 @@ export enum Region {
     EUROPE = 'europe',
 }
 
-type GameMode = keyof typeof GAME_MODES;
-type GameType = keyof typeof GAME_TYPES;
+export type GameMode = keyof typeof GAME_MODES;
+export type GameType = keyof typeof GAME_TYPES;
 
 export interface MatchMetadata {
     dataVersion: string;

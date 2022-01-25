@@ -2,6 +2,7 @@ import { MatchInfo, MatchMetadata, MatchParticipant, MatchTeam } from '../../typ
 import {
     AwardType,
     ChampionClassType,
+    MatchMap,
     MatchReport,
     MatchResult,
     MatchStats,
@@ -217,6 +218,7 @@ export class Match {
 
         return {
             ID: this.metadata.matchId,
+            Map: ['ARAM', 'KINGPORO'].includes(this.info.gameMode) ? MatchMap.HA : MatchMap.SR,
             Result: alliedTeam.win ? MatchResult.Win : MatchResult.Loss,
             CreatedAt: this.info.gameCreation,
             Duration: this.durationInSeconds(),
