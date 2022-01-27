@@ -8,7 +8,7 @@ import { createGunzip } from 'zlib';
 
 import { AwardType, Damage, MatchStats } from '../types/common';
 
-export function sleep(ms: number) {
+export function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
@@ -20,7 +20,6 @@ export function aggregateAwards(...awardsList: Partial<Record<AwardType, number>
     return aggregateObjects(...awardsList);
 }
 
-// deno-lint-ignore no-explicit-any
 export function aggregateObjects<T extends Record<string, any>>(
     ...list: T[]
 ): T {
@@ -133,6 +132,9 @@ export async function download(
     url: string,
     destination: string
 ): Promise<void> {
+    if (existsSync(destination)) {
+        return;
+    }
     const res = await fetch(url);
     const fh = createWriteStream(destination);
     ensureDir(dirname(destination));

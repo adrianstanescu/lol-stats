@@ -5,15 +5,12 @@ export function baseURL(prefix: Server | Region): string {
     return `https://${prefix}.api.riotgames.com/lol`;
 }
 
-export const START_DATE = new Date('2021-01-01 00:00:00');
-export const END_DATE = new Date('2021-12-31 23:59:59');
-
 export const PAGE_SIZE = 20;
 
 export const GAME_MODES = {
     CLASSIC: {
         gameMode: 'CLASSIC',
-        description: 'Classic Summoner\'s Rift and Twisted Treeline games',
+        description: "Classic Summoner's Rift and Twisted Treeline games",
     },
     ODIN: { gameMode: 'ODIN', description: 'Dominion/Crystal Scar games' },
     ARAM: { gameMode: 'ARAM', description: 'ARAM games' },
@@ -26,7 +23,7 @@ export const GAME_MODES = {
     KINGPORO: { gameMode: 'KINGPORO', description: 'Legend of the Poro King games' },
     SIEGE: { gameMode: 'SIEGE', description: 'Nexus Siege games' },
     ASSASSINATE: { gameMode: 'ASSASSINATE', description: 'Blood Hunt Assassin games' },
-    ARSR: { gameMode: 'ARSR', description: 'All Random Summoner\'s Rift games' },
+    ARSR: { gameMode: 'ARSR', description: "All Random Summoner's Rift games" },
     DARKSTAR: { gameMode: 'DARKSTAR', description: 'Dark Star: Singularity games' },
     STARGUARDIAN: { gameMode: 'STARGUARDIAN', description: 'Star Guardian Invasion games' },
     PROJECT: { gameMode: 'PROJECT', description: 'PROJECT: Hunters games' },
