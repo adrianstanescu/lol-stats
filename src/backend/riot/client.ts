@@ -48,8 +48,8 @@ export class Client {
     }
 }
 
-const DEFAULT_CLIENT = new Client(riotAPIKey());
+const defaultClient = new Client(riotAPIKey());
 
 export async function riotFetch(method: APIRequestMethod, ...args: any) {
-    return DEFAULT_CLIENT.fetch(method, ...args);
+    return defaultClient.fetch(method, ...args);
 }

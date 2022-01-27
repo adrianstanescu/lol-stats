@@ -44,11 +44,14 @@ class RateLimit {
         return this.requests.length >= this.limit - 1;
     }
     async willRequest(): Promise<void> {
-        for (let i = 0; i < this.seconds; i++) {
+        // don't wait more than the limit window
+        let wait = this.seconds;
+        while (wait > 0) {
             if (!this.isLimited()) {
                 break;
             }
             await sleep(1000);
+            wait -= 1;
         }
         this.requests.push(new Date().getTime());
     }
@@ -120,9 +123,7 @@ export class RateLimiter {
             Object.keys(APIRequestMethod).map((method) => {
                 return [
                     method,
-                    methodLimitConfigs.map(
-                        ({ type, seconds, limit }) => new RateLimit(limit, seconds)
-                    ),
+                    methodLimitConfigs.map(({ seconds, limit }) => new RateLimit(limit, seconds)),
                 ];
             })
         ) as Record<APIRequestMethod, RateLimit[]>;
@@ -136,15 +137,15 @@ export class RateLimiter {
         for (const info of status) {
             const limit =
                 info.type === RateLimitType.App
-                    ? this.appLimits.find((l) => l.seconds === info.seconds)
-                    : this.methodLimits[method]?.find((l) => l.seconds === info.seconds);
+                    ? this.appLimits.find((limit) => limit.seconds === info.seconds)
+                    : this.methodLimits[method]?.find((limit) => limit.seconds === info.seconds);
             if (!limit) {
                 continue;
             }
             limit.refreshCount(info.count);
         }
         if (headers.has('Retry-After')) {
-            const retryAfterMS = parseInt(headers.get('Retry-After') ?? '5', 10) * 1000;
+            const retryAfterMS = Number(headers.get('Retry-After') ?? '5') * 1000;
             console.info('halting future api calls for', retryAfterMS, 'ms');
             this.retryAfter = sleep(retryAfterMS);
         }
