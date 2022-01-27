@@ -202,6 +202,7 @@ export enum AwardType {
     TreeHugger = 'TreeHugger',
     ThriftShopper = 'ThriftShopper',
     UnderpantsGnome = 'UnderpantsGnome',
+    Trailblazer = 'Trailblazer',
     BavarianGod = 'BavarianGod',
     ScaredyPants = 'ScaredyPants',
     Bulwark = 'Bulwark',
