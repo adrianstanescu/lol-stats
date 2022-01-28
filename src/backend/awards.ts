@@ -1,13 +1,12 @@
 import { AwardType, MatchUser, MatchUserType } from '../types/common';
 import { ItemSet } from './models/itemSet';
-import { isDefined, totalDamage } from './utils';
+import { isDefined, kdaValue, killParticipation, totalDamage } from './utils';
 
 type GetWinner = (participants: { [puuid: string]: MatchUser }) => string | null;
 
 function simplePickWinner(
     select: 'first' | 'last',
-    getAmountFn: (stats: MatchUser) => number | undefined,
-    getFallbackAmountFn?: (stats: MatchUser) => number,
+    getAmountFn: (stats: MatchUser) => number | number[] | undefined,
     hasWinnerFn?: (participants: { [puuid: string]: MatchUser }) => boolean
 ) {
     return (participants: { [puuid: string]: MatchUser }) => {
@@ -16,33 +15,38 @@ function simplePickWinner(
         }
         const values = Object.entries(participants)
             .map(([puuid, participant]) => {
-                const amount = getAmountFn(participant);
-                if (amount === undefined) {
+                const amounts = getAmountFn(participant);
+                if (amounts === undefined) {
                     return undefined;
                 }
-                return [puuid, amount, participant] as const;
+                return [Array.isArray(amounts) ? amounts : [amounts], puuid, participant] as const;
             })
             .filter(isDefined);
-        values.sort(([_a, a, aUser], [_b, b, bUser]) => {
-            const diff = b - a;
-            if (diff === 0) {
-                if (getFallbackAmountFn) {
-                    return getFallbackAmountFn(bUser) - getFallbackAmountFn(aUser);
+        values.sort(([aValues], [bValues]) => {
+            const maxPriority = aValues.length;
+            if (bValues.length !== maxPriority) {
+                throw new Error('getAmountFn should return the same number of items');
+            }
+            for (let priority = 0; priority < maxPriority; priority++) {
+                const diff = bValues[priority] - aValues[priority];
+                if (diff > 0) {
+                    return 1;
+                } else if (diff < 0) {
+                    return -1;
                 }
             }
-            return diff;
+            return 0;
         });
-        const [puuid] = select === 'first' ? values[0] : values[values.length - 1];
+        const [, puuid] = select === 'first' ? values[0] : values[values.length - 1];
         return puuid;
     };
 }
 
 const AWARDS: Partial<Record<AwardType, GetWinner>> = {
-    [AwardType.Kenny]: simplePickWinner(
-        'first',
-        ({ Stats }) => Stats.Score.Champion.Deaths,
-        ({ Stats }) => Stats.Misc.TotalTimeSpentDead
-    ),
+    [AwardType.Kenny]: simplePickWinner('first', ({ Stats }) => [
+        Stats.Score.Champion.Deaths,
+        Stats.Misc.TotalTimeSpentDead,
+    ]),
     [AwardType.Buddhist]: simplePickWinner('last', ({ Stats }) =>
         totalDamage(Stats.Damage.Champions)
     ),
@@ -53,7 +57,6 @@ const AWARDS: Partial<Record<AwardType, GetWinner>> = {
             const itemSet = new ItemSet(Items);
             return itemSet.isFullBuild() ? itemSet.getFullBuildValue() : Infinity;
         },
-        undefined,
         (participants) => {
             // at least 2 teammates must have a full build
             const allyFullBuilds = Object.values(participants)
@@ -67,6 +70,9 @@ const AWARDS: Partial<Record<AwardType, GetWinner>> = {
         'first',
         ({ Stats }) => Stats.Score.Champion.Kills + Stats.Score.Champion.Assists
     ),
+    [AwardType.Trailblazer]: simplePickWinner('first', ({ Stats }) =>
+        Stats.Firsts.TowerKill && Stats.Firsts.ChampionKill ? 1 : 0
+    ),
     [AwardType.BavarianGod]: simplePickWinner(
         'first',
         ({ Stats }) =>
@@ -79,6 +85,33 @@ const AWARDS: Partial<Record<AwardType, GetWinner>> = {
     ),
     [AwardType.Bulwark]: simplePickWinner('first', ({ Stats }) =>
         totalDamage(Stats.Defense.DamageTaken)
+    ),
+    [AwardType.CombatMedic]: simplePickWinner('first', ({ Stats }) => Stats.Support.Heal),
+    [AwardType.Dominator]: simplePickWinner('first', ({ Stats }) => [
+        kdaValue(Stats.Score.Champion),
+        killParticipation(Stats.Score.Champion),
+    ]),
+    [AwardType.Protector]: simplePickWinner('first', ({ Stats }) => Stats.Support.Shield),
+    [AwardType.Finisher]: simplePickWinner('first', ({ Stats }) => [
+        Stats.Score.Champion.Kills,
+        Stats.MultiKills.Penta,
+        Stats.MultiKills.Quadra,
+        Stats.MultiKills.Triple,
+        Stats.MultiKills.Double,
+    ]),
+    [AwardType.PainBringer]: simplePickWinner('first', ({ Stats }) =>
+        totalDamage(Stats.Damage.Champions)
+    ),
+    [AwardType.SiegeMaster]: simplePickWinner('first', ({ Stats }) => Stats.Damage.Siege),
+    [AwardType.CreepLover]: simplePickWinner('first', ({ Stats }) => Stats.CS),
+    [AwardType.CrowdController]: simplePickWinner('first', ({ Stats }) => Stats.Support.CC),
+    [AwardType.RichBitch]: simplePickWinner('first', ({ Stats }) => Stats.Misc.GoldEarned),
+    [AwardType.AlQaeda]: simplePickWinner('first', ({ Stats }) => [
+        Stats.Score.Turret.Kills + Stats.Score.Inhibitor.Kills + Stats.Score.Nexus.Kills,
+        Stats.Damage.Siege,
+    ]),
+    [AwardType.PressingIntensifies]: simplePickWinner('first', ({ Stats }) =>
+        Object.values(Stats.Spells).reduce((acc, count) => acc + count, 0)
     ),
 };
 

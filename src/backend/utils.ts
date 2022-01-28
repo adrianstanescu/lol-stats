@@ -6,7 +6,7 @@ import { dirname, join } from 'path';
 import { extract, Headers } from 'tar-stream';
 import { createGunzip } from 'zlib';
 
-import { AwardType, Damage, MatchStats } from '../types/common';
+import { AwardType, Damage, KDA, MatchStats } from '../types/common';
 
 export function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -80,6 +80,12 @@ export const slugify = (...args: (string | number)[]): string => {
 
 export function totalDamage(damage: Damage) {
     return damage.Magic + damage.Physical + damage.True;
+}
+export function killParticipation(kda: KDA) {
+    return kda.Kills + kda.Assists;
+}
+export function kdaValue(kda: KDA) {
+    return killParticipation(kda) / kda.Deaths;
 }
 
 export async function selectiveExtract(

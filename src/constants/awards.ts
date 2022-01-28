@@ -32,6 +32,12 @@ export const AWARDS: Award[] = [
         sentiment: AwardSentiment.Positive,
     },
     {
+        type: AwardType.Trailblazer,
+        name: 'Trailblazer',
+        description: 'First blood + first brick',
+        sentiment: AwardSentiment.Positive,
+    },
+    {
         type: AwardType.BavarianGod,
         name: 'Bavarian God',
         description: 'Highest total damage dealt / gold invested in items',
@@ -118,7 +124,7 @@ export const AWARDS: Award[] = [
     {
         type: AwardType.AlQaeda,
         name: 'Al-Qaeda',
-        description: 'Last hit on all structures',
+        description: 'Most structures destroyed',
         sentiment: AwardSentiment.Positive,
     },
     {

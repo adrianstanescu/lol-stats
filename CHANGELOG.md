@@ -6,6 +6,7 @@
  - New stats section "Champions"
  - Match list
  - Riot API rate limiting and error handling
+ - New awards (Trailblazer, Combat Medic, Dominator, Protector, Finisher, Pain Bringer, Siege Master, Creep Lover, Crowd Controller, Rich Bitch, Al-Qaeda, Pressing Intensifies)
 
 ## [0.1.0] - 2022-01-15
 ### Initial release
