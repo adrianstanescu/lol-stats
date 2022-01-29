@@ -141,6 +141,7 @@ export async function download(
     if (existsSync(destination)) {
         return;
     }
+    console.log('downloading', url);
     const res = await fetch(url);
     const fh = createWriteStream(destination);
     ensureDir(dirname(destination));

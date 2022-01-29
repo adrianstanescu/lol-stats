@@ -61,7 +61,6 @@ export function groupMatches(report: MainReport) {
 
         if (sessionDate.toLocaleDateString() !== prevSessionDate.toLocaleDateString()) {
             if (currentGroup) {
-                console.log(currentStats);
                 currentGroup.TotalKDA = statsToKDA(totalStats);
                 currentGroup.KDA = statsToKDA(currentStats);
                 currentGroup.TotalWinRate = statsToWinRate(totalStats);

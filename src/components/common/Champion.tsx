@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import { MetaChampion } from '../../types/common';
 import styles from './Champion.module.css';
+import championMissingIcon from '../../assets/championmissing.png';
+import { useDataDragonVersion } from '../../hooks/report';
 
 interface Props {
     value: MetaChampion;
@@ -8,6 +10,7 @@ interface Props {
 }
 
 export default function Champion({ value, variant = 'full'}: Props) {
+    const dataDragonVersion = useDataDragonVersion();
     return (
         <div className={clsx(styles.container, {[styles.compact]: variant === 'compact'})}>
             <div className={styles.iconWrapper} title={`${value.Name}, ${value.Title}`}>
@@ -16,7 +19,7 @@ export default function Champion({ value, variant = 'full'}: Props) {
                     style={{
                         width: value.W,
                         height: value.H,
-                        backgroundImage: `url(/assets/img/sprite/${value.Sprite}`,
+                        backgroundImage: value.Sprite ? `url(/dd/${dataDragonVersion}/img/sprite/${value.Sprite}` : `url(${championMissingIcon})`,
                         backgroundPosition: `${-value.X}px ${-value.Y}px`,
                     }}
                 />

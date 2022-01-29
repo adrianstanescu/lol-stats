@@ -1,16 +1,26 @@
 import { MetaChampion } from '../types/common';
-
-import championData from '../assets/champion.json';
+import { Champion } from './models/champion';
 
 export function getMetaChampion(key: string): MetaChampion {
-    const c = (championData.data as any)[key];
+    const champion = Champion.get(key);
+    if (!champion) {
+        return {
+            Name: key,
+            Title: 'Unknown champion',
+            Sprite: '',
+            W: 48,
+            H: 48,
+            X: 0,
+            Y: 0,
+        };
+    }
     return {
-        Name: c?.name ?? 'Unknown',
-        Title: c?.title ?? 'Unknown champion',
-        Sprite: c?.image?.sprite ?? '',
-        W: c?.image?.w ?? 0,
-        H: c?.image?.h ?? 0,
-        X: c?.image?.x ?? 0,
-        Y: c?.image?.y ?? 0,
+        Name: champion.data.name,
+        Title: champion.data.title,
+        Sprite: champion.data.image.sprite,
+        W: champion.data.image.w,
+        H: champion.data.image.h,
+        X: champion.data.image.x,
+        Y: champion.data.image.y,
     };
 }

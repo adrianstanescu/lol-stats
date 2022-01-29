@@ -15,3 +15,5 @@ https://raw.communitydragon.org/pbe/plugins/rcp-fe-lol-champion-details/global/d
 https://raw.communitydragon.org/11.24/plugins/rcp-fe-lol-postgame/global/default/icon-add-friend.png
 
 https://raw.communitydragon.org/11.24/plugins/rcp-fe-lol-postgame/global/default/icon-ha-defeat.png
+
+https://raw.communitydragon.org/pbe/plugins/rcp-fe-lol-static-assets/global/default/images/icon-search-empty-poro.svg

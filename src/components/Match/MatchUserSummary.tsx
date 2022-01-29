@@ -1,7 +1,6 @@
 import { MainReport, MatchUserSummary } from '../../types/common';
 import Champion from '../common/Champion';
 import styles from './MatchUserSummary.module.css';
-
 import KDAComponent from '../common/KDA';
 import CS from '../common/CS';
 import Gold from '../common/Gold';

@@ -1,17 +1,10 @@
-import useFetch, { CachePolicies } from 'use-http';
-
-import { MainReport } from '../types/common';
 import RadioButtonGroup from '../components/common/RadioButtonGroup';
-import MainReportComponent from '../components/MainReport/MainReport';
+import MainReportContainer from '../components/Reports/MainReportContainer';
 import { AggregateType, useAggregateType } from '../hooks/preferences';
+import { Suspense } from 'react';
 
 export default function Home() {
     const [aggregateType, setAggregateType] = useAggregateType();
-    const { data } = useFetch<MainReport>(
-        '/mainReport.json',
-        { cachePolicy: CachePolicies.CACHE_AND_NETWORK },
-        []
-    );
 
     return (
         <div>
@@ -23,7 +16,7 @@ export default function Home() {
                     label: t,
                 }))}
             />
-            {data && <MainReportComponent report={data} />}
+            <Suspense fallback="Loading...">{<MainReportContainer />}</Suspense>
         </div>
     );
 }

@@ -10,7 +10,7 @@ import {
 import { EMPTY_MATCH_STATS } from '../constants';
 import { User } from './user';
 import { aggregateAwards, aggregateStats, combinations } from '../utils';
-import { configUsers } from '../config';
+import { configUsers, datadragonVersion } from '../config';
 import { getMetaChampion } from '../meta';
 
 export class MainReportBuilder implements MainReport {
@@ -22,8 +22,12 @@ export class MainReportBuilder implements MainReport {
     public Venn: { key: string[]; data: number }[] = [];
     public Meta: {
         Champions: { [key: string]: MetaChampion };
+        DataDragonVersion: string;
+        CreatedAt: Date;
     } = {
         Champions: {},
+        DataDragonVersion: datadragonVersion(),
+        CreatedAt: new Date(),
     };
 
     async addUser(user: User) {

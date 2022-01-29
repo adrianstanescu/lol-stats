@@ -25,7 +25,7 @@ export class Summoner {
     getReport(): SummonerReport {
         return {
             Name: this.name,
-            Icon: `img/profileicon/${this.profileIconId}.png`,
+            Icon: `${this.profileIconId}.png`,
             Level: this.summonerLevel,
         };
     }

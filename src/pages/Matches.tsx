@@ -1,19 +1,14 @@
-import useFetch, { CachePolicies } from 'use-http';
-
-import { MainReport } from '../types/common';
-import MatchList from '../components/Match/MatchList';
+import MatchListReportContainer from '../components/Reports/MatchListReportContainer';
+import { Suspense } from 'react';
 
 export default function Matches() {
     // TODO: split mainReport.json
-    const { data } = useFetch<MainReport>(
-        '/mainReport.json',
-        { cachePolicy: CachePolicies.CACHE_AND_NETWORK },
-        []
-    );
 
     return (
         <div>
-            {data && <MatchList report={data} />}
+            <Suspense fallback="Loading...">
+                <MatchListReportContainer />
+            </Suspense>
         </div>
     );
 }

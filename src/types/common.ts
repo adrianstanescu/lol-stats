@@ -26,6 +26,8 @@ export interface MainReport {
     Venn: { key: string[]; data: number }[];
     Meta: {
         Champions: { [key: string]: MetaChampion };
+        DataDragonVersion: string;
+        CreatedAt: Date;
     };
 }
 
