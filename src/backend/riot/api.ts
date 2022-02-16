@@ -29,35 +29,31 @@ export async function getMatch(matchID: string): Promise<Match> {
 }
 
 export async function getMatchIDs(puuid: string): Promise<string[]> {
-    const existingMatchIDs: string[] =
-        ((await cache.get(CacheSection.InternalMatchIDs, puuid)) as string[]) ?? [];
-    const lastExistingMatch = existingMatchIDs?.[0];
+    const matchIDs = new Set(
+        ((await cache.get(CacheSection.InternalMatchIDs, puuid)) as string[]) ?? []
+    );
 
-    // const startTime = START_DATE.getTime() / 1000;
-    // const endTime = END_DATE.getTime() / 1000;
     let offset = 0;
-    const matchIDs = [];
-    // eslint-disable-next-line no-labels
-    paging_loop: {
-        while (true) {
-            const response = await riotFetch(APIRequestMethod.MatchIDs, puuid, offset);
-            const data = await response.json();
-            const matchIDsPage = data as string[];
-            
-            for (const matchID of matchIDsPage) {
-                if (lastExistingMatch === matchID) {
-                    // eslint-disable-next-line no-labels
-                    break paging_loop;
-                }
-                matchIDs.push(matchID);
+    let lastPage = false;
+
+    while (true) {
+        const response = await riotFetch(APIRequestMethod.MatchIDs, puuid, offset);
+        const data = await response.json();
+        const matchIDsPage = data as string[];
+
+        for (const matchID of matchIDsPage) {
+            if (matchIDs.has(matchID)) {
+                lastPage = true;
             }
-            if (matchIDsPage.length < PAGE_SIZE) {
-                break;
-            }
-            offset += PAGE_SIZE;
+            matchIDs.add(matchID);
         }
+        if (lastPage || matchIDsPage.length < PAGE_SIZE) {
+            break;
+        }
+        offset += PAGE_SIZE;
     }
-    const allMatchIDs = [...matchIDs, ...existingMatchIDs];
+
+    const allMatchIDs = Array.from(matchIDs);
     cache.set(CacheSection.InternalMatchIDs, puuid, allMatchIDs);
     return allMatchIDs;
 }

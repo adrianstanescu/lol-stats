@@ -1,5 +1,5 @@
 import { UserReport } from '../../types/common';
-import { AggregateType, useAggregate, useAggregateType } from '../../hooks/preferences';
+import { AggregateType, useAggregate, useAggregateType } from '../../hooks/usePreferences';
 import iconDefeat from '../../assets/icon-defeat.webm';
 import iconVictory from '../../assets/icon-victory.webm';
 import Stat from './Stat';

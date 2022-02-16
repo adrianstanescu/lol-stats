@@ -1,5 +1,5 @@
 import DurationUnitFormat from 'intl-unofficial-duration-unit-format';
-import { AggregateType } from '../../hooks/preferences';
+import { AggregateType } from '../../hooks/usePreferences';
 import { FRACTION_DIGITS_BY_AGGREGATE_TYPE } from '../../constants/formatting';
 
 const LOCALE = undefined;

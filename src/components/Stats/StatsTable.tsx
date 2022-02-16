@@ -71,9 +71,9 @@ export default function StatsTable({ users }: Props) {
             <thead>
                 <tr>
                     <th />
-                    {Object.keys(users).map((id) => (
+                    {Object.keys(users).map((id, index) => (
                         <th key={id}>
-                            <UserAvatar key={id} variant="heading" user={users[id]} />
+                            <UserAvatar key={id} variant="heading" user={users[id]} index={index} />
                         </th>
                     ))}
                 </tr>

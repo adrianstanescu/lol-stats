@@ -1,0 +1,35 @@
+.row {
+    transition: var(--transition-default);
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: var(--time-column-width) var(--result-column-width) repeat(auto-fit, minmax(0, 1fr));
+    min-height: 4rem;
+}
+.row:hover {
+    background-color: var(--background-highlight);
+}
+
+.timeColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.resultColumn {
+    display: flex;
+    justify-content: center;
+}
+.userColumn {
+    display: block;
+}
+
+.time {
+    color: var(--text-color-secondary);
+    font-size: 0.8em;
+    height: 0;
+    overflow: hidden;
+    transition: var(--transition-default);
+}
+.expanded .time {
+    height: 1.4em;
+}

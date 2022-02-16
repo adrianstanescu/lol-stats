@@ -1,6 +1,9 @@
 :root {
+    --box-unit: 2px;
+
     --border-radius: 1rem;
     --background-default: #010a13;
+    --background-highlight: rgba(255, 255, 255, 0.1);
     --border-default: #333;
     --text-color-default: #eee;
     --text-color-secondary: #aaa;
@@ -8,6 +11,16 @@
     --text-color-negative: #f44336;
 
     --transition-default: all 200ms ease-in;
+
+    --palette-pastel-1: #fd7f6f;
+    --palette-pastel-2: #7eb0d5;
+    --palette-pastel-3: #b2e061;
+    --palette-pastel-4: #bd7ebe;
+    --palette-pastel-5: #ffb55a;
+    --palette-pastel-6: #ffee65;
+    --palette-pastel-7: #beb9db;
+    --palette-pastel-8: #fdcce5;
+    --palette-pastel-9: #8bd3c7;
 }
 
 body {
@@ -30,4 +43,22 @@ kbd {
     padding: 0px 3px;
     border-radius: 2px;
     line-height: 1.4em;
+}
+
+@media (min-resolution: 1.25dppx) {
+    :root {
+        --box-unit: 1.6px;
+    }
+}
+
+@media (min-resolution: 1.5dppx) {
+    :root {
+        --box-unit: 2px;
+    }
+}
+
+@media (min-resolution: 2dppx) {
+    :root {
+        --box-unit: 2px;
+    }
 }

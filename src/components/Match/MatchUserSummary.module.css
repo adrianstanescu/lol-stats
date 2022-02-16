@@ -3,6 +3,7 @@
     flex-direction: row;
     gap: 1em;
     justify-content: space-between;
+    align-items: center;
     padding: 0.4em 1em;
 }
 
@@ -18,5 +19,11 @@
 .stats {
     display: flex;
     flex-direction: row;
-    gap: 1em;
+    gap: 0.5em;
+    height: 1.4em;
+    overflow: hidden;
+    transition: var(--transition-default);
+}
+.compact .stats {
+    height: 0;
 }

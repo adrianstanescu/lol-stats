@@ -1,4 +1,4 @@
-import { AggregateType } from '../hooks/preferences';
+import { AggregateType } from '../hooks/usePreferences';
 
 export const FRACTION_DIGITS_BY_AGGREGATE_TYPE = {
     // TODO: should take into account significat digits after formatting

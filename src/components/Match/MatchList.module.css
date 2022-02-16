@@ -1,10 +1,24 @@
-.matchList > thead {
+.matchList {
+    --time-column-width: 100px;
+    --result-column-width: 100px;
+}
+.wrapper {
+    position: relative;
+}
+.header {
+    display: grid;
+    grid-template-columns: var(--time-column-width) var(--result-column-width) repeat(auto-fit, minmax(0, 1fr));
+    font-weight: bold;
+    text-align: center;
+
     position: sticky;
-    z-index: 1;
-    /* hide avatar */
     top: calc(-82px - 0.5rem);
     background-color: var(--background-default);
+    z-index: 2;
+    padding-bottom: 0.5em;
 }
-.matchList > thead th {
-    vertical-align: bottom;
+.timeColumn {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
 }

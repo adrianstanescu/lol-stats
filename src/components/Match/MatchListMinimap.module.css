@@ -1,0 +1,100 @@
+.container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    height: 100vh;
+    border-left: 1px solid var(--border-default);
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    background: var(--background-default);
+}
+.track {
+    position: fixed;
+    user-select: none;
+    height: 100vh;
+    width: 100%;
+    z-index: 3;
+}
+.viewport {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-right: 0;
+}
+.match, .group {
+    display: flex;
+    flex-direction: row;
+    padding: var(--box-unit) calc(var(--box-unit) * 2);
+}
+.users {
+    position: sticky;
+    top: 0;
+    background-color: var(--background-default);
+    padding: var(--box-unit) calc(var(--box-unit) * 3);
+}
+.users > div {
+    width: calc(var(--box-unit) * 11);
+    height: calc(var(--box-unit) * 11);
+    margin: 0 calc(var(--box-unit) * 2);
+    border-radius: var(--box-unit);
+    display: inline-block;
+}
+
+.group {
+    height: calc(var(--box-unit) * 4);
+    display: flex;
+    align-items: center;
+}
+.groupDate {
+    width: calc(var(--box-unit) * 5);
+    height: calc(var(--box-unit) * 2);
+    margin: 0 calc(var(--box-unit) * 5);
+    border-radius: var(--box-unit);
+    background-color: var(--text-color-default);
+}
+.groupUser {
+    width: calc(var(--box-unit) * 11);
+    height: calc(var(--box-unit) * 4);
+    margin: 0 calc(var(--box-unit) * 2);
+    border-radius: var(--box-unit);
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.groupUser > div {
+    width: calc(var(--box-unit) * 5);
+    height: calc(var(--box-unit) * 4);
+}
+
+.list {
+    flex: 1;
+}
+
+.matchUser {
+    width: calc(var(--box-unit) * 7);
+    height: calc(var(--box-unit) * 3);
+    margin: 0 calc(var(--box-unit) * 4);
+    border-radius: var(--box-unit);
+}
+.matchResult {
+    width: calc(var(--box-unit) * 3);
+    height: calc(var(--box-unit) * 3);
+    margin: 0 calc(var(--box-unit) * 3) 0 calc(var(--box-unit) * 9);
+    border-radius: var(--box-unit);
+}
+
+.positive {
+    background-color: var(--text-color-positive);
+}
+.negative {
+    background-color: var(--text-color-negative);
+}
+.active {
+    background-color: var(--text-color-default);
+}

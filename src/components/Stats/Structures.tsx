@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
 import { UserReport } from '../../types/common';
-import { useAggregate, useAggregateType } from '../../hooks/preferences';
+import { useAggregate, useAggregateType } from '../../hooks/usePreferences';
 import FormattedNumber from '../common/FormattedNumber';
 import Stat from './Stat';
 import TowerIcon from '../icons/TowerIcon';

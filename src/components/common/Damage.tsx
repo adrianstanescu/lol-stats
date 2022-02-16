@@ -6,7 +6,7 @@ import styles from './Damage.module.css';
 import trueDamageIcon from '../../assets/true-damage.png';
 import physicalDamageIcon from '../../assets/physical-damage.png';
 import magicDamageIcon from '../../assets/magic-damage.png';
-import { useAggregate } from '../../hooks/preferences';
+import { useAggregate } from '../../hooks/usePreferences';
 import FormattedNumber from './FormattedNumber';
 
 interface Props {

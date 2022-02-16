@@ -1,6 +1,6 @@
 import RadioButtonGroup from '../components/common/RadioButtonGroup';
 import MainReportContainer from '../components/Reports/MainReportContainer';
-import { AggregateType, useAggregateType } from '../hooks/preferences';
+import { AggregateType, useAggregateType } from '../hooks/usePreferences';
 import { Suspense } from 'react';
 
 export default function Home() {

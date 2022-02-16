@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { MetaChampion } from '../../types/common';
 import styles from './Champion.module.css';
 import championMissingIcon from '../../assets/championmissing.png';
-import { useDataDragonVersion } from '../../hooks/report';
+import { useDataDragonVersion } from '../../hooks/useReport';
 
 interface Props {
     value: MetaChampion;
@@ -26,7 +26,7 @@ export default function Champion({ value, variant = 'full'}: Props) {
             </div>
             <div className={styles.details}>
                 <div className={styles.name}><code>{value.Name}</code></div>
-                <div className={styles.title}>{value.Title}</div>
+                <div className={styles.title} title={value.Title}>{value.Title}</div>
             </div>
         </div>
     );

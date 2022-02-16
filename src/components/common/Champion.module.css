@@ -1,22 +1,32 @@
 .container {
     display: inline-flex;
     flex-direction: row;
+    overflow: hidden;
+    max-width: 100%;
 }
 .iconWrapper {
     width: 48px;
     height: 48px;
     margin-right: 0.6em;
+    transition: var(--transition-default);
 }
 .icon {
     background-repeat: no-repeat;
+    transition: var(--transition-default);
 }
 .title {
     color: var(--text-color-secondary);
+    height: 1.4em;
+    transition: var(--transition-default);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .details {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow: hidden;
 }
 
 
@@ -30,5 +40,5 @@
     transform-origin: 0 0;
 }
 .compact .title {
-    display: none;
+    height: 0;
 }

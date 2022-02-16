@@ -3,6 +3,10 @@ import FormattedNumber from '../common/FormattedNumber';
 import MatchResultComponent from '../common/MatchResult';
 import MatchUserSummaryComponent from './MatchUserSummary';
 
+import styles from './MatchSummary.module.css';
+import { useState } from 'react';
+import clsx from 'clsx';
+
 interface Props {
     match: MatchSummary;
     userIDs: string[];
@@ -11,26 +15,34 @@ interface Props {
 
 export default function MatchSummaryComponent({ match, userIDs, report }: Props) {
     const date = new Date(match.CreatedAt);
+    const [expanded, setExpanded] = useState(false);
+
+    const handleRowClick = () => {
+        setExpanded((prev) => !prev);
+    };
+
     return (
-        <tr>
-            <td>
-                <div style={{ color: 'var(--text-color-secondary)' }}>
+        <div className={clsx(styles.row, { [styles.expanded]: expanded })} onClick={handleRowClick}>
+            <div className={styles.timeColumn}>
+                <FormattedNumber variant="duration" value={match.Duration} />
+                <div className={styles.time}>
                     <code>{date.toLocaleTimeString()}</code>
                 </div>
-            </td>
-            <td>
-                <FormattedNumber variant="duration" value={match.Duration} />
-            </td>
-            <td>
+            </div>
+            <div className={styles.resultColumn}>
                 <MatchResultComponent result={match.Result} map={match.Map} />
-            </td>
-            {userIDs.map((userID) => (
-                <td key={userID}>
-                    {match.Users[userID] && (
-                        <MatchUserSummaryComponent summary={match.Users[userID]} report={report} />
-                    )}
-                </td>
-            ))}
-        </tr>
+            </div>
+            {userIDs.map((userID) =>
+                match.Users[userID] ? (
+                    <MatchUserSummaryComponent
+                        summary={match.Users[userID]}
+                        report={report}
+                        variant={expanded ? 'full' : 'compact'}
+                    />
+                ) : (
+                    <div />
+                )
+            )}
+        </div>
     );
 }

@@ -1,4 +1,4 @@
-import { useMainReport } from '../../hooks/report';
+import { useMainReport } from '../../hooks/useReport';
 import StatsTable from '../Stats/StatsTable';
 
 export default function MainReportContainer() {

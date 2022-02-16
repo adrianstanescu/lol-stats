@@ -1,5 +1,31 @@
+.summaryRow {
+    position: sticky;
+    height: 4rem;
+    top: 44px;
+    background-color: var(--background-default);
+    box-shadow: 0 0.3em .6em var(--background-default), 0 0.25em 0.25em var(--background-default);
+    z-index: 1;
+    display: grid;
+    grid-template-columns: var(--time-column-width) var(--result-column-width) repeat(auto-fit, minmax(0, 1fr));
+    align-items: flex-end;
+}
+.spacer {
+    height: 10px;
+}
+.timeColumn {
+    text-align: center;
+}
+.resultColumn {
+    text-align: center;
+}
+.userColumn {
+    display: flex;
+    justify-content: center;
+}
+
 .groupStats {
-    padding: 0.2em 1em;
+    padding: 0 1em;
+    border-collapse: collapse;
 }
 .groupStats th {
     text-align: left;
@@ -13,10 +39,6 @@
 .groupStats:hover th {
     opacity: 1;
 }
-
-.summaryRow > td {
-    position: sticky;
-    top: 38px;
-    background-color: var(--background-default);
-    box-shadow: 0 0.4em .8em var(--background-default), 0 0.25em 0.25em var(--background-default);
+.groupStats td {
+    padding: 0 0.2em;
 }

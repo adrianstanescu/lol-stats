@@ -1,14 +1,14 @@
 import { KDA } from '../../types/common';
 import FormattedNumber, { FormattedNumberProps } from './FormattedNumber';
 import scoreIcon from '../../assets/score.png';
+import WithIcon from './WithIcon';
 
 interface Props extends Omit<FormattedNumberProps, 'value' | 'variant'> {
     value: KDA;
 }
 export default function KDAComponent({ value, ...rest }: Props) {
     return (
-        <span title={((value.Kills + value.Assists) / value.Deaths).toFixed(4)}>
-            <img src={scoreIcon} alt="KDA" style={{ width: '1em', height: '1em' }} />{' '}
+        <WithIcon url={scoreIcon} title={((value.Kills + value.Assists) / value.Deaths).toFixed(4)}>
             <code>
                 <FormattedNumber value={value.Kills} {...rest} />
                 &nbsp;&nbsp;/&nbsp;&nbsp;
@@ -16,6 +16,6 @@ export default function KDAComponent({ value, ...rest }: Props) {
                 &nbsp;&nbsp;/&nbsp;&nbsp;
                 <FormattedNumber value={value.Assists} {...rest} />
             </code>
-        </span>
+        </WithIcon>
     );
 }

@@ -1,5 +1,5 @@
-import { Fragment } from 'react';
-import { MainReport, MatchSummaryGroup } from '../../types/common';
+import useIntersectionObserver from '../../hooks/useIntersectionObserver';
+import { MainReport, MatchResult, MatchSummaryGroup } from '../../types/common';
 import FormattedNumber from '../common/FormattedNumber';
 import MatchSummary from './MatchSummary';
 import styles from './MatchSummaryGroup.module.css';
@@ -11,20 +11,33 @@ interface Props {
 }
 
 export default function MatchSummaryGroupComponent({ group, userIDs, report }: Props) {
+    const [ref, isVisible] = useIntersectionObserver({ rootMargin: '1000px', freezeOnceVisible: true });
+    if (!isVisible) {
+        return (
+            <div
+                className={styles.wrapper}
+                ref={ref}
+                style={{ height: `calc(4rem + 10px + ${group.Matches.length * 4}em)` }}
+            ></div>
+        );
+    }
     return (
-        <Fragment>
-            <tr className={styles.summaryRow}>
-                <td
-                    colSpan={2}
-                    style={{
-                        textAlign: 'center',
-                    }}
-                >
+        <div className={styles.wrapper} ref={ref}>
+            <div className={styles.summaryRow}>
+                <div className={styles.timeColumn}>
                     <code>{group.Date}</code>
-                </td>
-                <td />
+                </div>
+                <div className={styles.resultColumn}>
+                    <code>
+                        {group.Matches.filter((match) => match.Result === MatchResult.Win).length} W
+                    </code>{' '}
+                    <code>
+                        {group.Matches.filter((match) => match.Result === MatchResult.Loss).length}{' '}
+                        L
+                    </code>
+                </div>
                 {userIDs.map((id) => (
-                    <td key={id}>
+                    <div key={id} className={styles.userColumn}>
                         {group.KDA[id] && (
                             <table className={styles.groupStats}>
                                 <thead>
@@ -32,6 +45,7 @@ export default function MatchSummaryGroupComponent({ group, userIDs, report }: P
                                         <th />
                                         <th>Session</th>
                                         <th>Total</th>
+                                        <th>Change</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -87,15 +101,15 @@ export default function MatchSummaryGroupComponent({ group, userIDs, report }: P
                                 </tbody>
                             </table>
                         )}
-                    </td>
+                    </div>
                 ))}
-                <td colSpan={1 + userIDs.length} />
-            </tr>
+            </div>
+            <div className={styles.spacer} />
             {group.Matches.slice()
                 .reverse()
                 .map((match, i) => (
                     <MatchSummary key={match.ID} match={match} userIDs={userIDs} report={report} />
                 ))}
-        </Fragment>
+        </div>
     );
 }

@@ -1,4 +1,4 @@
-import { useMainReport } from '../../hooks/report';
+import { useMainReport } from '../../hooks/useReport';
 import MatchList from '../Match/MatchList';
 
 export default function MatchListReportContainer() {

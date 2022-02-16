@@ -4,7 +4,9 @@
 
 ⬜ Season selector / custom date range
 
-⬜ Match list
+✅ Match list
+
+⬜ Champion list
 
 ⬜ Match details
 
@@ -15,4 +17,3 @@
 ⬜ Report sharing
 
 ⬜ Browser only operation
-

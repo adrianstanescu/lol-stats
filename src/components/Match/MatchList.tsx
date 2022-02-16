@@ -4,6 +4,7 @@ import styles from './MatchList.module.css';
 import ClockIcon from '../icons/ClockIcon';
 import { groupMatches } from '../../process/groupMatches';
 import MatchSummaryGroupComponent from './MatchSummaryGroup';
+import MatchListMinimap from './MatchListMinimap';
 
 interface Props {
     report: MainReport;
@@ -11,32 +12,41 @@ interface Props {
 export default function MatchList({ report }: Props) {
     const userIDs = Object.keys(report.Users);
     const groups = groupMatches(report).reverse();
-    // TODO: add virtualization
+    const minimapMargin = (userIDs.length + 1) * 15 + 6;
     return (
-        <table className={styles.matchList}>
-            <thead>
-                <tr>
-                    <th colSpan={2}>
+        <div
+            className={styles.wrapper}
+            style={{ marginRight: `calc(var(--box-unit) * ${minimapMargin} + 2px)` }}
+        >
+            <div className={styles.matchList}>
+                <div className={styles.header}>
+                    <div className={styles.timeColumn}>
                         <ClockIcon />
-                    </th>
-                    <th />
-                    {userIDs.map((id) => (
-                        <th key={id}>
-                            <UserAvatar key={id} variant="heading" user={report.Users[id]} />
-                        </th>
+                    </div>
+                    <div></div>
+                    {userIDs.map((id, index) => (
+                        <div key={id}>
+                            <UserAvatar
+                                key={id}
+                                variant="heading"
+                                user={report.Users[id]}
+                                index={index}
+                            />
+                        </div>
                     ))}
-                </tr>
-            </thead>
-            <tbody>
-                {groups.map((group) => (
-                    <MatchSummaryGroupComponent
-                        key={group.Date}
-                        report={report}
-                        userIDs={userIDs}
-                        group={group}
-                    />
-                ))}
-            </tbody>
-        </table>
+                </div>
+                <div>
+                    {groups.map((group) => (
+                        <MatchSummaryGroupComponent
+                            key={group.Date}
+                            report={report}
+                            userIDs={userIDs}
+                            group={group}
+                        />
+                    ))}
+                </div>
+            </div>
+            <MatchListMinimap groups={groups} />
+        </div>
     );
 }

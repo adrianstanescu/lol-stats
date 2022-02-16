@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 
 import { UserReport } from '../../types/common';
-import { useAggregate } from '../../hooks/preferences';
+import { useAggregate } from '../../hooks/usePreferences';
 import FormattedNumber from '../common/FormattedNumber';
 import Stat from './Stat';
 import KDAComponent from '../common/KDA';
