@@ -10,7 +10,8 @@
     --text-color-positive: #66bb6a;
     --text-color-negative: #f44336;
 
-    --transition-default: all 200ms ease-in;
+    --transition-default: 200ms ease 0ms;
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.6, 1) 0ms;
 
     --palette-pastel-1: #fd7f6f;
     --palette-pastel-2: #7eb0d5;

@@ -1,0 +1,30 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    background-color: transparent;
+    outline: 0px;
+    border: 0px;
+    margin: 0px;
+    cursor: pointer;
+    user-select: none;
+    appearance: none;
+    text-decoration: none;
+    text-align: center;
+    flex: 0 0 auto;
+    font-size: 1em;
+    padding: 0.5em;
+    border-radius: 50%;
+    color: var(--text-color-default);
+    transition: var(--transition-fast);
+    transition-property: background-color;
+
+}
+.button:hover {
+    background-color: var(--background-highlight);
+}
+.active svg path {
+    fill: currentColor;
+}

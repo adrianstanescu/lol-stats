@@ -8,7 +8,7 @@
     position: absolute;
     opacity: 0;
     transition: var(--transition-default);
-
+    transition-property: opacity;
 }
 .icon.selected {
     opacity: 1;
@@ -28,12 +28,32 @@
     text-align: center;
     font-size: 0.9rem;
     line-height: 2rem;
-    /* font-weight: 100; */
     background-color: var(--background-default);
     border: 1px solid var(--border-default);
     border-radius: var(--border-radius);
     color: var(--background-default);
     text-shadow: 1px 1px 2px var(--text-color-default), -1px -1px 2px var(--text-color-default);
+}
+.primaryToggle {
+    position: absolute;
+    z-index: 1;
+    bottom: 0.6rem;
+    left: -0.75rem;
+    background-color: var(--background-default);
+    border-radius: 50%;
+    color: var(--background-default);
+    opacity: 0;
+    transition: var(--transition-default);
+    transition-property: opacity, background-color;
+}
+.primaryToggle.isPrimary {
+    background-color: transparent;
+    opacity: 1;
+}
+
+.container:hover .primaryToggle, .container:hover .primaryToggle.isPrimary {
+    background-color: var(--background-default);
+    opacity: 1;
 }
 .name {
     padding-top: 6rem;

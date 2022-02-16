@@ -1,5 +1,6 @@
 .row {
     transition: var(--transition-default);
+    transition-property: background-color;
     cursor: pointer;
     display: grid;
     grid-template-columns: var(--time-column-width) var(--result-column-width) repeat(auto-fit, minmax(0, 1fr));
@@ -29,6 +30,7 @@
     height: 0;
     overflow: hidden;
     transition: var(--transition-default);
+    transition-property: height;
 }
 .expanded .time {
     height: 1.4em;

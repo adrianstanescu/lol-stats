@@ -5,12 +5,14 @@ import ClockIcon from '../icons/ClockIcon';
 import { groupMatches } from '../../process/groupMatches';
 import MatchSummaryGroupComponent from './MatchSummaryGroup';
 import MatchListMinimap from './MatchListMinimap';
+import { usePrimaryUserID } from '../../hooks/usePreferences';
 
 interface Props {
     report: MainReport;
 }
 export default function MatchList({ report }: Props) {
-    const userIDs = Object.keys(report.Users);
+    const [primaryUserID] = usePrimaryUserID();
+    const userIDs = Object.keys(report.Users).sort((a, _) => (a === primaryUserID ? -1 : 0));
     const groups = groupMatches(report).reverse();
     const minimapMargin = (userIDs.length + 1) * 15 + 6;
     return (
@@ -28,6 +30,7 @@ export default function MatchList({ report }: Props) {
                         <div key={id}>
                             <UserAvatar
                                 key={id}
+                                id={id}
                                 variant="heading"
                                 user={report.Users[id]}
                                 index={index}

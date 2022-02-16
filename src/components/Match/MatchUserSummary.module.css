@@ -23,6 +23,7 @@
     height: 1.4em;
     overflow: hidden;
     transition: var(--transition-default);
+    transition-property: height;
 }
 .compact .stats {
     height: 0;

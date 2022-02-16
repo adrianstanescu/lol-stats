@@ -1,5 +1,6 @@
 import { atom, useRecoilState } from 'recoil';
 import { UserReport } from '../types/common';
+import { localStorageEffect } from '../utils';
 
 export enum AggregateType {
     Total = 'Total',
@@ -9,6 +10,7 @@ export enum AggregateType {
 
 interface Preferences {
     aggregateType: AggregateType;
+    primaryUserID?: string;
 }
 
 export const DEFAULT_PREFERENCES: Preferences = {
@@ -18,27 +20,46 @@ export const DEFAULT_PREFERENCES: Preferences = {
 export const preferencesState = atom<Preferences>({
     key: 'preferencesState',
     default: DEFAULT_PREFERENCES,
+    effects_UNSTABLE: [localStorageEffect('preferences')],
 });
 
 export function useAggregateType() {
     const [preferences, setPreferences] = useRecoilState(preferencesState);
-    const setAggregateType = (t: AggregateType) => {
+    const setAggregateType = (newType: AggregateType) => {
         setPreferences((prev) => {
             return {
                 ...prev,
-                aggregateType: t
-            }
+                aggregateType: newType,
+            };
         });
     };
     return [preferences.aggregateType, setAggregateType] as const;
 }
 
-function aggregate(values: number[], minutes: number, games: number, aggregateType: AggregateType): number[] {
+export function usePrimaryUserID() {
+    const [preferences, setPreferences] = useRecoilState(preferencesState);
+    const setPrimaryUserID = (newID?: string) => {
+        setPreferences((prev) => {
+            return {
+                ...prev,
+                primaryUserID: newID,
+            };
+        });
+    };
+    return [preferences.primaryUserID, setPrimaryUserID] as const;
+}
+
+function aggregate(
+    values: number[],
+    minutes: number,
+    games: number,
+    aggregateType: AggregateType
+): number[] {
     if (aggregateType === AggregateType.PerGame) {
-        return values.map(v => v / games);
+        return values.map((v) => v / games);
     }
     if (aggregateType === AggregateType.PerMinute) {
-        return values.map(v => v / minutes);
+        return values.map((v) => v / minutes);
     }
     return values;
 }
@@ -51,6 +72,6 @@ export function useAggregate<T extends number | number[]>(value: T, user: UserRe
     if (Array.isArray(value)) {
         return aggregate(value, minutes, games, aggregateType) as T;
     }
-    const [ singleValue ] = aggregate([value], minutes, games, aggregateType);
+    const [singleValue] = aggregate([value], minutes, games, aggregateType);
     return singleValue as T;
 }

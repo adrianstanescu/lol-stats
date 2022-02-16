@@ -12,6 +12,7 @@ import Time from './Time';
 import Gold from './Gold';
 import Structures from './Structures';
 import Champions from './Champions';
+import { usePrimaryUserID } from '../../hooks/usePreferences';
 
 interface Props {
     users: { [id: string]: UserReport };
@@ -66,14 +67,22 @@ const SECTIONS = [
 ];
 
 export default function StatsTable({ users }: Props) {
+    const [primaryUserID] = usePrimaryUserID();
+    const userIDs = Object.keys(users).sort((a, _) => (a === primaryUserID ? -1 : 0));
     return (
         <table>
             <thead>
                 <tr>
                     <th />
-                    {Object.keys(users).map((id, index) => (
+                    {userIDs.map((id, index) => (
                         <th key={id}>
-                            <UserAvatar key={id} variant="heading" user={users[id]} index={index} />
+                            <UserAvatar
+                                key={id}
+                                id={id}
+                                variant="heading"
+                                user={users[id]}
+                                index={index}
+                            />
                         </th>
                     ))}
                 </tr>
@@ -82,7 +91,7 @@ export default function StatsTable({ users }: Props) {
                 {SECTIONS.map(({ key, label, Component }) => (
                     <tr key={key}>
                         <th>{label}</th>
-                        {Object.keys(users).map((id) => (
+                        {userIDs.map((id) => (
                             <td key={id} className={styles.cell}>
                                 <Component user={users[id]} />
                             </td>
