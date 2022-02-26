@@ -15,6 +15,7 @@ import { getMatchAwards } from '../awards';
 import { Champion } from './champion';
 
 export class Match {
+    id: string;
     metadata!: MatchMetadata;
     info!: MatchInfo;
     status?: {
@@ -26,8 +27,9 @@ export class Match {
     users: { [puuid: string]: MatchUser } = {};
     awards: { [puuid: string]: Partial<Record<AwardType, number>> } = {};
 
-    constructor(data: Partial<Match>) {
+    constructor(data: Partial<Match>, id: string) {
         Object.assign(this, data);
+        this.id = id;
         if (this.isValid()) {
             const userPUUIDS = Object.values(this.getUsersPUUID());
             for (const participant of this.info.participants ?? []) {

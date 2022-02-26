@@ -2,55 +2,15 @@
     "name": "lol-stats",
     "version": "0.1.0",
     "private": true,
-    "dependencies": {
-        "@fontsource/fjalla-one": "^4.5.0",
-        "@testing-library/jest-dom": "^5.14.1",
-        "@testing-library/react": "^12.0.0",
-        "@testing-library/user-event": "^13.2.1",
-        "@types/bytes": "^3.1.1",
-        "@types/intl-unofficial-duration-unit-format": "^3.1.0",
-        "@types/jest": "^27.0.1",
-        "@types/node": "^16.7.13",
-        "@types/node-fetch": "2.5.12",
-        "@types/react": "^17.0.20",
-        "@types/react-dom": "^17.0.9",
-        "@types/tar-stream": "^2.2.2",
-        "bytes": "^3.1.1",
-        "clsx": "^1.1.1",
-        "dotenv": "^10.0.0",
-        "envalid": "^7.2.2",
-        "intl-messageformat": "^9.11.2",
-        "intl-unofficial-duration-unit-format": "^3.1.0",
-        "just-clone": "^5.0.1",
-        "node-fetch": "^2.6.6",
-        "node-fetch-progress": "^1.0.2",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
-        "react-router-dom": "6",
-        "react-scripts": "5.0.0",
-        "recoil": "^0.5.2",
-        "source-map-explorer": "^2.5.2",
-        "tar-stream": "^2.2.0",
-        "ts-node": "^10.4.0",
-        "typescript": "^4.4.2",
-        "web-vitals": "^2.1.0",
-        "zlib": "^1.0.5"
-    },
-    "resolutions": {
-        "mini-css-extract-plugin": "2.4.7"
-    },
     "scripts": {
-        "start": "PORT=8888 react-scripts start",
         "build": "react-scripts build",
-        "test": "react-scripts test",
+        "build-monitor": "esbuild src/backend/cmd/monitor.ts --bundle --minify --sourcemap --platform=node --analyze --outfile=dist/monitor.js",
         "eject": "react-scripts eject",
-        "main-report": "ts-node src/backend/cmd/mainReport.ts"
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
+        "main-report": "esbuild src/backend/cmd/mainReport.ts --bundle --minify --sourcemap --platform=node --analyze --outfile=dist/mainReport.js && node --enable-source-maps dist/mainReport.js",
+        "monitor": "yarn build-monitor && yarn run-monitor",
+        "run-monitor": "node --enable-source-maps dist/monitor.js",
+        "start": "PORT=8888 react-scripts start",
+        "test": "react-scripts test"
     },
     "browserslist": {
         "production": [
@@ -65,8 +25,53 @@
         ]
     },
     "prettier": {
-        "singleQuote": true,
         "printWidth": 100,
+        "singleQuote": true,
         "tabWidth": 4
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "resolutions": {
+        "mini-css-extract-plugin": "2.4.7"
+    },
+    "dependencies": {
+        "@fontsource/fjalla-one": "^4.5.0",
+        "@testing-library/jest-dom": "^5.14.1",
+        "@testing-library/react": "^12.0.0",
+        "@testing-library/user-event": "^13.2.1",
+        "@types/bytes": "^3.1.1",
+        "@types/intl-unofficial-duration-unit-format": "^3.1.0",
+        "@types/jest": "^27.0.1",
+        "@types/node": "^16.7.13",
+        "@types/node-fetch": "2.5.12",
+        "@types/object-hash": "^2.2.1",
+        "@types/react": "^17.0.20",
+        "@types/react-dom": "^17.0.9",
+        "@types/tar-stream": "^2.2.2",
+        "bytes": "^3.1.1",
+        "clsx": "^1.1.1",
+        "dotenv": "^10.0.0",
+        "envalid": "^7.2.2",
+        "esbuild": "^0.14.23",
+        "intl-messageformat": "^9.11.2",
+        "intl-unofficial-duration-unit-format": "^3.1.0",
+        "just-clone": "^5.0.1",
+        "node-fetch": "^2.6.6",
+        "node-fetch-progress": "^1.0.2",
+        "object-hash": "^3.0.0",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-router-dom": "6",
+        "react-scripts": "5.0.0",
+        "recoil": "^0.5.2",
+        "source-map-explorer": "^2.5.2",
+        "tar-stream": "^2.2.0",
+        "typescript": "^4.4.2",
+        "web-vitals": "^2.1.0",
+        "zlib": "^1.0.5"
     }
 }

@@ -11,12 +11,12 @@ interface Config {
     LOCALE: string;
     RIOT_API_KEY: string;
     USERS: string;
+    PUBLIC_DIR: string;
 }
 
 config();
 
 let latestDataDragonVersion: string = '';
-
 
 export const env = cleanEnv<Config>(process.env, {
     REGION: str({ choices: ['americas', 'asia', 'europe'] }),
@@ -24,6 +24,7 @@ export const env = cleanEnv<Config>(process.env, {
     LOCALE: str(),
     RIOT_API_KEY: str(),
     USERS: str(),
+    PUBLIC_DIR: str(),
 });
 
 export function configUsers(): UserData[] {
@@ -35,7 +36,7 @@ export function configUsers(): UserData[] {
             id: slugify(name),
             name: name.trim(),
             accounts: accounts.split(',').map((account) => {
-                const [summonerName, server] = account.split('@').map(s => s.trim());
+                const [summonerName, server] = account.split('@').map((s) => s.trim());
                 if (!Object.values(Server).includes(server as Server)) {
                     throw new Error('Invalid account server');
                 }
@@ -70,7 +71,11 @@ export async function loadLatestDataDragonVersion() {
         return;
     }
     const response = await fetch('https://ddragon.leagueoflegends.com/api/versions.json');
-    const versions = await response.json() as string[];
+    const versions = (await response.json()) as string[];
     latestDataDragonVersion = versions[0];
     console.log('Data Dragon version:', latestDataDragonVersion);
+}
+
+export function publicDir() {
+    return env.PUBLIC_DIR;
 }

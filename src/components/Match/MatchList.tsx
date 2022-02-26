@@ -6,12 +6,14 @@ import { groupMatches } from '../../process/groupMatches';
 import MatchSummaryGroupComponent from './MatchSummaryGroup';
 import MatchListMinimap from './MatchListMinimap';
 import { usePrimaryUserID } from '../../hooks/usePreferences';
+import { useNewMatchIDs } from '../../hooks/useNewMatchIDs';
 
 interface Props {
     report: MainReport;
 }
 export default function MatchList({ report }: Props) {
     const [primaryUserID] = usePrimaryUserID();
+    const newMatchIDs = useNewMatchIDs();
     const userIDs = Object.keys(report.Users).sort((a, _) => (a === primaryUserID ? -1 : 0));
     const groups = groupMatches(report).reverse();
     const minimapMargin = (userIDs.length + 1) * 15 + 6;
@@ -45,6 +47,7 @@ export default function MatchList({ report }: Props) {
                             report={report}
                             userIDs={userIDs}
                             group={group}
+                            newMatchIDs={newMatchIDs}
                         />
                     ))}
                 </div>

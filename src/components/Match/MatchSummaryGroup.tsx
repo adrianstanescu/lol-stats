@@ -8,10 +8,14 @@ interface Props {
     group: MatchSummaryGroup;
     userIDs: string[];
     report: MainReport;
+    newMatchIDs: Set<string>;
 }
 
-export default function MatchSummaryGroupComponent({ group, userIDs, report }: Props) {
-    const [ref, isVisible] = useIntersectionObserver({ rootMargin: '1000px', freezeOnceVisible: true });
+export default function MatchSummaryGroupComponent({ group, userIDs, report, newMatchIDs }: Props) {
+    const [ref, isVisible] = useIntersectionObserver({
+        rootMargin: '1000px',
+        freezeOnceVisible: true,
+    });
     if (!isVisible) {
         return (
             <div
@@ -108,7 +112,13 @@ export default function MatchSummaryGroupComponent({ group, userIDs, report }: P
             {group.Matches.slice()
                 .reverse()
                 .map((match, i) => (
-                    <MatchSummary key={match.ID} match={match} userIDs={userIDs} report={report} />
+                    <MatchSummary
+                        key={match.ID}
+                        match={match}
+                        userIDs={userIDs}
+                        report={report}
+                        isNew={newMatchIDs.has(match.ID)}
+                    />
                 ))}
         </div>
     );

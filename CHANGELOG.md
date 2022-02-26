@@ -11,6 +11,8 @@
  - Match list minimap
  - Ability to set the primary user
  - Persist preferences to localStorage
+ - Monitor command
+ - Docker support
 
 ## [0.1.0] - 2022-01-15
 ### Initial release

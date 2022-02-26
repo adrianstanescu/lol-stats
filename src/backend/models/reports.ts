@@ -1,6 +1,6 @@
+import hash from 'object-hash';
 import {
     MainReport,
-    MatchReport,
     MatchResult,
     MatchSummary,
     MatchUserSummary,
@@ -12,6 +12,7 @@ import { User } from './user';
 import { aggregateAwards, aggregateStats, combinations } from '../utils';
 import { configUsers, datadragonVersion } from '../config';
 import { getMetaChampion } from '../meta';
+import { Match } from './match';
 
 export class MainReportBuilder implements MainReport {
     public Users: {
@@ -30,6 +31,9 @@ export class MainReportBuilder implements MainReport {
         CreatedAt: new Date(),
     };
 
+    private users: User[] = [];
+    private processedMatchIDs = new Set<string>();
+
     async addUser(user: User) {
         const summoners = await user.getSummoners();
         const summonerReports = summoners.map((s) => s.getReport());
@@ -42,52 +46,67 @@ export class MainReportBuilder implements MainReport {
             Summoners: summonerReports,
             Awards: {},
         };
+        this.users.push(user);
     }
 
-    addMatch(match: MatchReport) {
-        if (this.Matches.find((m) => m.ID === match.ID)) {
+    addMatch(match: Match) {
+        if (this.processedMatchIDs.has(match.id)) {
+            return;
+        }
+        this.processedMatchIDs.add(match.id);
+        if (!match.isValid()) {
             return;
         }
 
+        const matchReport = match.getReport();
+
         // if more than one user, only use matches with at least two users
-        if (configUsers().length > 1 && Object.keys(match.Users).length < 2) {
+        if (configUsers().length > 1 && Object.keys(matchReport.Users).length < 2) {
             return;
         }
         const summaries: { [id: string]: MatchUserSummary } = {};
-        for (const id of Object.keys(match.Users)) {
+        for (const id of Object.keys(matchReport.Users)) {
             if (!this.Users[id]) {
                 throw new Error('User not found');
             }
-            if (match.Result === MatchResult.Win) {
+            if (matchReport.Result === MatchResult.Win) {
                 this.Users[id].Wins += 1;
             } else {
                 this.Users[id].Losses += 1;
             }
-            this.Users[id].Duration += match.Duration;
-            this.Users[id].Stats = aggregateStats(this.Users[id].Stats, match.Users[id].Stats);
-            this.Users[id].Awards = aggregateAwards(this.Users[id].Awards, match.Users[id].Awards);
+            this.Users[id].Duration += matchReport.Duration;
+            this.Users[id].Stats = aggregateStats(
+                this.Users[id].Stats,
+                matchReport.Users[id].Stats
+            );
+            this.Users[id].Awards = aggregateAwards(
+                this.Users[id].Awards,
+                matchReport.Users[id].Awards
+            );
 
             summaries[id] = {
-                CS: match.Users[id].Stats.CS,
-                Gold: match.Users[id].Stats.Misc.GoldEarned,
-                Champion: match.Users[id].Champion,
-                Champions: match.Users[id].Stats.Score.Champion,
+                CS: matchReport.Users[id].Stats.CS,
+                Gold: matchReport.Users[id].Stats.Misc.GoldEarned,
+                Champion: matchReport.Users[id].Champion,
+                Champions: matchReport.Users[id].Stats.Score.Champion,
             };
-            if (this.Meta.Champions[match.Users[id].Champion] === undefined) {
-                this.Meta.Champions[match.Users[id].Champion] = getMetaChampion(match.Users[id].Champion);
+            if (this.Meta.Champions[matchReport.Users[id].Champion] === undefined) {
+                this.Meta.Champions[matchReport.Users[id].Champion] = getMetaChampion(
+                    matchReport.Users[id].Champion
+                );
             }
         }
-        // const users = Object.fromEntries(Object.entries(match.Users).map([id, stats])
+        // const users = Object.fromEntries(Object.entries(matchReport.Users).map([id, stats])
         this.Matches.push({
-            ID: match.ID,
-            CreatedAt: match.CreatedAt,
-            Duration: match.Duration,
-            Map: match.Map,
-            Result: match.Result,
+            ID: matchReport.ID,
+            CreatedAt: matchReport.CreatedAt,
+            Duration: matchReport.Duration,
+            Map: matchReport.Map,
+            Result: matchReport.Result,
             Users: summaries,
         });
 
-        const vennKeys = combinations(...Object.keys(match.Users).sort());
+        const vennKeys = combinations(...Object.keys(matchReport.Users).sort());
         for (const vennKey of vennKeys) {
             const existingVenn = this.Venn.findIndex((v) => v.key.join('-') === vennKey.join('-'));
             if (existingVenn !== -1) {
@@ -103,5 +122,30 @@ export class MainReportBuilder implements MainReport {
 
     sortMatches() {
         this.Matches.sort((a, b) => b.CreatedAt - a.CreatedAt);
+    }
+
+    toJSON() {
+        return {
+            Matches: this.Matches,
+            Meta: this.Meta,
+            Users: this.Users,
+            Venn: this.Venn,
+            Hash: this.getHash(),
+        };
+    }
+
+    getUsers() {
+        return this.users;
+    }
+
+    getHash(): string {
+        return hash({
+            Matches: this.Matches,
+            Users: this.Users,
+        });
+    }
+
+    matchWasProcessed(matchID: string): boolean {
+        return this.processedMatchIDs.has(matchID);
     }
 }

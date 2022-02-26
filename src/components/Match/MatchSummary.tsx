@@ -11,9 +11,10 @@ interface Props {
     match: MatchSummary;
     userIDs: string[];
     report: MainReport;
+    isNew: boolean;
 }
 
-export default function MatchSummaryComponent({ match, userIDs, report }: Props) {
+export default function MatchSummaryComponent({ match, userIDs, report, isNew }: Props) {
     const date = new Date(match.CreatedAt);
     const [expanded, setExpanded] = useState(false);
 
@@ -22,7 +23,10 @@ export default function MatchSummaryComponent({ match, userIDs, report }: Props)
     };
 
     return (
-        <div className={clsx(styles.row, { [styles.expanded]: expanded })} onClick={handleRowClick}>
+        <div
+            className={clsx(styles.row, { [styles.expanded]: expanded, [styles.new]: isNew })}
+            onClick={handleRowClick}
+        >
             <div className={styles.timeColumn}>
                 <FormattedNumber variant="duration" value={match.Duration} />
                 <div className={styles.time}>
@@ -35,12 +39,13 @@ export default function MatchSummaryComponent({ match, userIDs, report }: Props)
             {userIDs.map((userID) =>
                 match.Users[userID] ? (
                     <MatchUserSummaryComponent
+                        key={userID}
                         summary={match.Users[userID]}
                         report={report}
                         variant={expanded ? 'full' : 'compact'}
                     />
                 ) : (
-                    <div />
+                    <div key={userID} />
                 )
             )}
         </div>

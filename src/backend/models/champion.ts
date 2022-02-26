@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ChampionClassType } from '../../types/common';
-import { datadragonVersion, locale } from '../config';
+import { datadragonVersion, locale, publicDir } from '../config';
 import { download } from '../utils';
 
 interface RiotChampion {
@@ -52,16 +52,15 @@ interface RiotChampion {
     };
 }
 
-const publicDir = join(__dirname, '..', '..', '..', 'public');
-
 let champions: { [id: string]: RiotChampion } = {};
 let championsLoaded = false;
 export async function loadChampions() {
     if (championsLoaded) {
         return;
     }
+    const dir = publicDir();
     const src = `https://ddragon.leagueoflegends.com/cdn/${datadragonVersion()}/data/${locale()}/champion.json`;
-    const dst = join(publicDir, 'dd', datadragonVersion(), 'data', locale(), 'champion.json');
+    const dst = join(dir, 'dd', datadragonVersion(), 'data', locale(), 'champion.json');
 
     await download(src, dst);
     const data = JSON.parse(readFileSync(dst).toString());

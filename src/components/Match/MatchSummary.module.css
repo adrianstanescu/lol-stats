@@ -3,8 +3,12 @@
     transition-property: background-color;
     cursor: pointer;
     display: grid;
-    grid-template-columns: var(--time-column-width) var(--result-column-width) repeat(auto-fit, minmax(0, 1fr));
+    grid-template-columns: var(--time-column-width) var(--result-column-width) repeat(
+            auto-fit,
+            minmax(0, 1fr)
+        );
     min-height: 4rem;
+    border: 1px solid var(--background-default);
 }
 .row:hover {
     background-color: var(--background-highlight);
@@ -34,4 +38,25 @@
 }
 .expanded .time {
     height: 1.4em;
+}
+
+.new {
+    background-image: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.1) 0,
+        rgba(255, 255, 255, 0.2) 10%,
+        rgba(255, 255, 255, 0.1) 20%
+    );
+    background-size: 150vw;
+    animation: shine 1500ms infinite linear;
+}
+
+@keyframes shine {
+    0% {
+        background-position-x: -25vw;
+    }
+    50%,
+    100% {
+        background-position-x: 100vw;
+    }
 }

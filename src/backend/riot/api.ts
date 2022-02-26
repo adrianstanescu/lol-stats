@@ -20,12 +20,12 @@ export async function getSummoner(account: SummonerAccount): Promise<Summoner> {
 export async function getMatch(matchID: string): Promise<Match> {
     const cached = await cache.get(CacheSection.APIMatch, matchID);
     if (cached) {
-        return new Match(cached as Partial<Match>);
+        return new Match(cached as Partial<Match>, matchID);
     }
     const response = await riotFetch(APIRequestMethod.Match, matchID);
     const data = await response.json();
     await cache.set(CacheSection.APIMatch, matchID, data);
-    return new Match(data as Partial<Match>);
+    return new Match(data as Partial<Match>, matchID);
 }
 
 export async function getMatchIDs(puuid: string): Promise<string[]> {

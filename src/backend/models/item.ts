@@ -1,9 +1,10 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import riotItems from '../../assets/item.json';
+
+type RiotItemID = keyof typeof riotItems.data;
 
 interface RiotItem {
     name: string;
-    rune: {
+    rune?: {
         isrune: boolean;
         tier: number;
         type: string;
@@ -14,44 +15,32 @@ interface RiotItem {
         sell: number;
         purchasable: boolean;
     };
-    group: string;
+    group?: string;
     description: string;
     plaintext: string;
-    consumed: boolean;
-    stacks: number;
+    consumed?: boolean;
+    stacks?: number;
     depth: number;
-    consumeOnFull: boolean;
+    consumeOnFull?: boolean;
     from: string[];
-    into: string[];
-    specialRecipe: number;
-    inStore: boolean;
-    hideFromAll: boolean;
-    requiredChampion: string;
-    requiredAlly: string;
+    into?: string[];
+    specialRecipe?: number;
+    inStore?: boolean;
+    hideFromAll?: boolean;
+    requiredChampion?: string;
+    requiredAlly?: string;
     tags: string[];
     maps: { [mapid: string]: boolean };
-}
-
-let items: { [itemid: string]: RiotItem } = {};
-let itemsLoaded = false;
-function loadItems() {
-    if (itemsLoaded) {
-        return;
-    }
-    const data = JSON.parse(readFileSync(join(__dirname, '..', '..', 'assets', 'item.json')).toString());
-    items = data.data;
-    itemsLoaded = true;
 }
 
 export class Item {
     constructor(public id: string, public data: RiotItem) {}
     static get(id: number | string) {
-        loadItems();
-        const sourceData = items[id.toString()];
+        const sourceData = riotItems.data[id.toString() as RiotItemID];
         if (sourceData === undefined) {
             return undefined;
         }
-        return new Item(id.toString(), sourceData);
+        return new Item(id.toString(), sourceData as RiotItem);
     }
 
     getValue() {
