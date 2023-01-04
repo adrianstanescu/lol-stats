@@ -1,0 +1,28 @@
+.wrapper {
+    position: relative;
+}
+.header {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    font-weight: bold;
+    text-align: center;
+
+    position: sticky;
+    top: calc(-82px - 0.5rem);
+    background-color: var(--background-default);
+    z-index: 2;
+    padding-bottom: 0.5em;
+}
+.row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    min-height: 4rem;
+    gap: 1em;
+}
+.row > div {
+    display: flex;
+    align-items: center;
+}
+.stats {
+    justify-content: space-between;
+}

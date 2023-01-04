@@ -4,6 +4,7 @@ import MainMenu from './components/Main/MainMenu';
 
 import Home from './pages/Home';
 import Matches from './pages/Matches';
+import Champions from './pages/Champions';
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/matches" element={<Matches />} />
+                <Route path="/champions" element={<Champions />} />
             </Routes>
         </Fragment>
     );

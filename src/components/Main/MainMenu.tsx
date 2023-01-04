@@ -13,6 +13,9 @@ export default function MainMenu() {
                 <NavLink to="/matches" className={({isActive}) => clsx(styles.link, {[styles.active]: isActive})}>
                     Matches
                 </NavLink>
+                <NavLink to="/champions" className={({isActive}) => clsx(styles.link, {[styles.active]: isActive})}>
+                    Champions
+                </NavLink>
             </h2>
         </div>
     );
