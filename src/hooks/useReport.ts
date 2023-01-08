@@ -1,4 +1,5 @@
 import { atom, selector, useRecoilValue } from 'recoil';
+import { createChampionReport } from '../process/championReport';
 import { MainReport } from '../types/common';
 
 export enum AggregateType {
@@ -62,4 +63,11 @@ export function useMainReport() {
 }
 export function useDataDragonVersion() {
     return useRecoilValue(dataDragonVersionQuery) ?? 'default';
+}
+export function useChampionReport() {
+    const report = useMainReport();
+    if (!report) {
+        return;
+    }
+    return createChampionReport(report);
 }

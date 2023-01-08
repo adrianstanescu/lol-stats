@@ -1,4 +1,4 @@
-import { isDefined } from '../utils';
+import { isDefined } from '../../utils';
 import { Item } from './item';
 
 export class ItemSet {

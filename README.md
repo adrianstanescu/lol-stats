@@ -1,5 +1,16 @@
 # LoL Stats
 
+LoL Stats compiles data from League of Legends matches played with friends and provides metrics that are used to compare performance and track progress.
+
+The project is designed to be self-hosted by a user for their group of friends.
+
+Features:
+ - general statistics such as: champions played, win rate, game time, KDA, damage, structures destroyed
+ - match list with play session summaries
+ - average win rate and KDA grouped by champion
+
+Riot APIs used: MATCH-V5, SUMMONER-V4
+
 
 ## Development
 

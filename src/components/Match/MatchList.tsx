@@ -11,10 +11,19 @@ import { useNewMatchIDs } from '../../hooks/useNewMatchIDs';
 interface Props {
     report: MainReport;
 }
+
 export default function MatchList({ report }: Props) {
     const [primaryUserID] = usePrimaryUserID();
     const newMatchIDs = useNewMatchIDs();
-    const userIDs = Object.keys(report.Users).sort((a, _) => (a === primaryUserID ? -1 : 0));
+    const userIDs = Object.keys(report.Users).sort((a, b) => {
+        if (a === primaryUserID) {
+            return -1;
+        }
+        if (b === primaryUserID) {
+            return 1;
+        }
+        return 0;
+    });
     const groups = groupMatches(report).reverse();
     const minimapMargin = (userIDs.length + 1) * 15 + 6;
     return (

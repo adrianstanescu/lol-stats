@@ -1,6 +1,7 @@
 import { AwardType, MatchUser, MatchUserType } from '../types/common';
+import { isDefined } from '../utils';
 import { ItemSet } from './models/itemSet';
-import { isDefined, kdaValue, killParticipation, totalDamage } from './utils';
+import { kdaValue, killParticipation, totalDamage } from './utils';
 
 type GetWinner = (participants: { [puuid: string]: MatchUser }) => string | null;
 
