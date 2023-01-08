@@ -27,13 +27,15 @@ export const env = cleanEnv<Config>(process.env, {
     PUBLIC_DIR: str(),
 });
 
+
 export function configUsers(): UserData[] {
     const userStrings = env.USERS.split(';');
 
     return userStrings.map((userString) => {
         const [name, accounts] = userString.split(':');
+        const userId = slugify(name);
         return {
-            id: slugify(name),
+            id: userId,
             name: name.trim(),
             accounts: accounts.split(',').map((account) => {
                 const [summonerName, server] = account.split('@').map((s) => s.trim());
@@ -43,6 +45,7 @@ export function configUsers(): UserData[] {
                 return {
                     name: summonerName,
                     server: server as Server,
+                    userId,
                 };
             }),
         };

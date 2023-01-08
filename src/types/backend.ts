@@ -9,5 +9,6 @@ export interface UserData {
 export interface SummonerAccount {
     name: string;
     server: Server;
+    userId: string;
     // region: Region;
 }
