@@ -10,9 +10,10 @@ import {
     MatchUserType,
 } from '../../types/common';
 import { aggregateStats } from '../utils';
-import { configUsers } from '../config';
 import { getMatchAwards } from '../awards';
 import { Champion } from './champion';
+import { Summoner } from './summoner';
+import { GAME_MODES } from '../constants';
 
 export class Match {
     id: string;
@@ -52,20 +53,31 @@ export class Match {
     }
 
     isValid() {
-        return this.status?.status_code !== 404;
+        if (this.status?.status_code === 404) {
+            return false;
+        }
+
+        if (!Object.keys(GAME_MODES).includes(this.info.gameMode)) {
+            return false;
+        }
+
+        return true;
     }
 
     getUsersPUUID() {
         const puuids: { [id: string]: string } = {};
+        const summoners = Summoner.getAll();
 
-        for (const user of configUsers()) {
-            for (const account of user.accounts) {
-                for (const participant of this.info.participants) {
-                    if (participant.summonerName.toLowerCase() === account.name.toLowerCase()) {
-                        puuids[user.id] = participant.puuid;
-                    }
+        for (const summoner of summoners) {
+            for (const participant of this.info.participants) {
+                if (participant.puuid === summoner.puuid) {
+                    puuids[summoner.userId] = participant.puuid
                 }
             }
+        }
+
+        if (Object.keys(puuids).length === 0) {
+            throw new Error('None of the users are participants in this match');
         }
         return puuids;
     }

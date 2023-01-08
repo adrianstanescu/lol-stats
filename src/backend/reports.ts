@@ -21,7 +21,9 @@ export async function createMainReport(): Promise<MainReportBuilder> {
         const matchIDs = await user.getMatchIDs();
         for (const matchID of matchIDs) {
             const match = await getMatch(matchID);
-            mainReport.addMatch(match);
+            if (match.isValid()) {
+                mainReport.addMatch(match);
+            }
         }
         const summoners = await user.getSummoners();
         // console.log(summoners);

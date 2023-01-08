@@ -40,9 +40,11 @@ export class Client {
         if (!response.ok) {
             if (response.status === 429) {
                 return this.fetch(method, ...args);
-            } else {
-                throw new Error(`${response.status} ${response.statusText} response from Riot API`);
             }
+            if (response.status === 404) {
+                return response;
+            }
+            throw new Error(`${response.status} ${response.statusText} response from Riot API`);
         }
         return response;
     }
